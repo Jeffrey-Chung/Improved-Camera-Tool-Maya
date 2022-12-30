@@ -79,11 +79,11 @@ def focalLength150():
   
          
 def addDepthofField():
-    #Set DOF to be true
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".depthOfField", True)
+    cmds.setAttr(getSelectedCamera()+".depthOfField", True) #Set DOF to be true
+    cmds.setAttr(getSelectedCamera()+".locatorScale", 30)
+   
+         
+            
 
 
 
