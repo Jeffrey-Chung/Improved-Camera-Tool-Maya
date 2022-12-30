@@ -84,6 +84,8 @@ def addDepthofField():
     cmds.setAttr(shotCamera+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
     cmds.distanceDimension(sp=(0, 0, 0), ep=(-38.579, -21.701, -82.295)) #Use distance tool to create 2 locators between camera and object
     cmds.parent('locator3', shotCamera, r=True) #parent first locator under the selected camera
+    cmds.rename('locator4', 'AimLocator') #rename locator closer to the object to 'AimLocator'
+    cmds.connectAttr('distanceDimensionShape2.distance', shotCamera+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
     
          
             
