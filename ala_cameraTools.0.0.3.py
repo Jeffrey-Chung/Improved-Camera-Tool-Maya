@@ -56,11 +56,8 @@ def cameraTools():
         cmds.deleteUI('cameraTools')
         
     cmds.window('cameraTools', resizeToFitChildren=True, menuBar=True)
-   
 
     cmds.columnLayout(adjustableColumn = True, bgc = [0, 1, 1])
-    
-    
       
     cmds.separator(h=30)
     cmds.text('PREVIS: Creates an AlexaLF camera')
@@ -69,13 +66,17 @@ def cameraTools():
     
     cmds.button(label = 'Create Camera', command = 'createCamera()', width = 100, height = 100, bgc = [1, 1, 1])
 
-
     cmds.separator(h=50)
     cmds.text('LAYOUT: Sets AlexaLF Settings')
     cmds.separator(h=50)
     
     cmds.button(label = 'AlexaLF Settings', command = 'alexaCamera()', width=100, height=100, bgc = [1, 1, 1])
     
+    cmds.separator(h=50)
+    cmds.text('Depth of Field: Set DOF Rig')
+    cmds.separator(h=50)
+    
+    cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
 
     cmds.menu(label = "Set Focal Length on Selected Cameras", tearOff = True)
     cmds.menuItem(label = '12mm', command = 'adjustFocalLength(12)')
@@ -95,13 +96,7 @@ def cameraTools():
     cmds.menuItem(label = '135mm', command = 'adjustFocalLength(135)')
     cmds.menuItem(label = '150mm', command = 'adjustFocalLength(150)')
     
-    cmds.separator(h=50)
-    cmds.text('Depth of Field: Set DOF Rig')
-    cmds.separator(h=50)
-    
-    cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
     cmds.showWindow('cameraTools')
    
-
 cameraTools()
 
