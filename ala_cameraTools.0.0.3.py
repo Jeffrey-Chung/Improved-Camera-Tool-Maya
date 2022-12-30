@@ -28,54 +28,9 @@ def alexaCamera():
     setResolutionHeight = cmds.setAttr('defaultResolution.height', 1080)
     setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.778)
 
- 
-def focalLength12():
-    cmds.setAttr(getSelectedCamera()+".fl", 12)
-      
-def focalLength14():
-    cmds.setAttr(getSelectedCamera()+".fl", 14)
-                                   
-def focalLength16():
-    cmds.setAttr(getSelectedCamera()+".fl", 16)
-                        
-def focalLength18():
-    cmds.setAttr(getSelectedCamera()+".fl", 18)
-                      
-def focalLength21():
-    cmds.setAttr(getSelectedCamera()+".fl", 21)
-            
-def focalLength25():
-    cmds.setAttr(getSelectedCamera()+".fl", 25)
-                     
-def focalLength27():
-    cmds.setAttr(getSelectedCamera()+".fl", 27)
-                    
-def focalLength32():
-    cmds.setAttr(getSelectedCamera()+".fl", 32)
-               
-def focalLength35():
-    cmds.setAttr(getSelectedCamera()+".fl", 35)
-              
-def focalLength40():
-    cmds.setAttr(getSelectedCamera()+".fl", 40)
-                
-def focalLength50():
-    cmds.setAttr(getSelectedCamera()+".fl", 50)
-    
-def focalLength65():
-    cmds.setAttr(getSelectedCamera()+".fl", 65)
-   
-def focalLength75():
-    cmds.setAttr(getSelectedCamera()+".fl", 75)
-       
-def focalLength100():
-    cmds.setAttr(getSelectedCamera()+".fl", 100)
-  
-def focalLength135():
-    cmds.setAttr(getSelectedCamera()+".fl", 135)
-            
-def focalLength150():
-    cmds.setAttr(getSelectedCamera()+".fl", 150)
+#Set the focal length of the camera
+def adjustFocalLength(focalLength):
+    cmds.setAttr(getSelectedCamera()+".fl", focalLength)
   
          
 def addDepthofField():
@@ -123,22 +78,22 @@ def cameraTools():
     
 
     cmds.menu(label = "Set Focal Length on Selected Cameras", tearOff = True)
-    cmds.menuItem(label = '12mm', command = 'focalLength12()')
-    cmds.menuItem(label = '14mm', command = 'focalLength14()')
-    cmds.menuItem(label = '16mm', command = 'focalLength16()')
-    cmds.menuItem(label = '18mm', command = 'focalLength18()')
-    cmds.menuItem(label = '21mm', command = 'focalLength21()')
-    cmds.menuItem(label = '25mm', command = 'focalLength25()')
-    cmds.menuItem(label = '27mm', command = 'focalLength27()')
-    cmds.menuItem(label = '32mm', command = 'focalLength32()')
-    cmds.menuItem(label = '35mm', command = 'focalLength35()')
-    cmds.menuItem(label = '40mm', command = 'focalLength40()')
-    cmds.menuItem(label = '50mm', command = 'focalLength50()')
-    cmds.menuItem(label = '65mm', command = 'focalLength65()')
-    cmds.menuItem(label = '75mm', command = 'focalLength75()')
-    cmds.menuItem(label = '100mm', command = 'focalLength100()')
-    cmds.menuItem(label = '135mm', command = 'focalLength135()')
-    cmds.menuItem(label = '150mm', command = 'focalLength150()')
+    cmds.menuItem(label = '12mm', command = 'adjustFocalLength(12)')
+    cmds.menuItem(label = '14mm', command = 'adjustFocalLength(14)')
+    cmds.menuItem(label = '16mm', command = 'adjustFocalLength(16)')
+    cmds.menuItem(label = '18mm', command = 'adjustFocalLength(18)')
+    cmds.menuItem(label = '21mm', command = 'adjustFocalLength(21)')
+    cmds.menuItem(label = '25mm', command = 'adjustFocalLength(25)')
+    cmds.menuItem(label = '27mm', command = 'adjustFocalLength(27)')
+    cmds.menuItem(label = '32mm', command = 'adjustFocalLength(32)')
+    cmds.menuItem(label = '35mm', command = 'adjustFocalLength(35)')
+    cmds.menuItem(label = '40mm', command = 'adjustFocalLength(40)')
+    cmds.menuItem(label = '50mm', command = 'adjustFocalLength(50)')
+    cmds.menuItem(label = '65mm', command = 'adjustFocalLength(65)')
+    cmds.menuItem(label = '75mm', command = 'adjustFocalLength(75)')
+    cmds.menuItem(label = '100mm', command = 'adjustFocalLength(100)')
+    cmds.menuItem(label = '135mm', command = 'adjustFocalLength(135)')
+    cmds.menuItem(label = '150mm', command = 'adjustFocalLength(150)')
     
     cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
     cmds.showWindow('cameraTools')
