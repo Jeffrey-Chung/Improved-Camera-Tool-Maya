@@ -80,7 +80,8 @@ def focalLength150():
          
 def addDepthofField():
     cmds.setAttr(getSelectedCamera()+".depthOfField", True) #Set DOF to be true
-    cmds.setAttr(getSelectedCamera()+".locatorScale", 30)
+    cmds.setAttr(getSelectedCamera()+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
+    cmds.distanceDimension(sp=(0, 0, 0), ep=(-38.579, -21.701, -82.295)) #Use distance tool to create 2 locators between camera and object
    
          
             
