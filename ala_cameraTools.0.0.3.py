@@ -11,12 +11,17 @@ def getSelectedCamera():
             return camera_shape[0] #return shape node
     return None 
     
-# creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
-def createCamera():
-    cameraName = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
+#set default resolution to 1920 * 1080 and aspect ratio
+def setDefaultSettings():
     setResolutionWidth = cmds.setAttr('defaultResolution.width', 1920)
     setResolutionHeight = cmds.setAttr('defaultResolution.height', 1080)
     setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.778)
+    
+    
+# creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
+def createCamera():
+    cameraName = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
+    setDefaultSettings()
 
 
 # Sets the camera Aperature made by the pipeline to match an AlexaLF camera. And sets the scene Render Settings to HD.
@@ -24,9 +29,7 @@ def alexaCamera():
     cmds.setAttr(getSelectedCamera()+".horizontalFilmAperture", 1.247)
     cmds.setAttr(getSelectedCamera()+".verticalFilmAperture", 0.702)
     cmds.setAttr(getSelectedCamera()+".farClipPlane", 100000)
-    setResolutionWidth = cmds.setAttr('defaultResolution.width', 1920)
-    setResolutionHeight = cmds.setAttr('defaultResolution.height', 1080)
-    setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.778)
+    setDefaultSettings()
 
 #Set the focal length of the camera
 def adjustFocalLength(focalLength):
