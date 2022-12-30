@@ -3,6 +3,14 @@
 
 import maya.cmds as cmds
 
+#function to get selected camera on the outliner
+def getSelectedCamera():
+    for each_camera_transform in cmds.ls(sl=True): #loop over all cameras that are selected (transform node)
+        camera_shape = cmds.listRelatives(each_camera_transform,type="camera") #find the shape node
+        if camera_shape: #only set attr if a camera shape was found 
+            return camera_shape[0] #return shape node
+    return None 
+    
 # creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
 def createCamera():
     cameraName = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
@@ -13,118 +21,62 @@ def createCamera():
 
 # Sets the camera Aperature made by the pipeline to match an AlexaLF camera. And sets the scene Render Settings to HD.
 def alexaCamera():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".horizontalFilmAperture", 1.247)
-            cmds.setAttr(cam_shp[0]+".verticalFilmAperture", 0.702)
-            cmds.setAttr(cam_shp[0]+".farClipPlane", 100000)
-            
+    cmds.setAttr(getSelectedCamera()+".horizontalFilmAperture", 1.247)
+    cmds.setAttr(getSelectedCamera()+".verticalFilmAperture", 0.702)
+    cmds.setAttr(getSelectedCamera()+".farClipPlane", 100000)
     setResolutionWidth = cmds.setAttr('defaultResolution.width', 1920)
     setResolutionHeight = cmds.setAttr('defaultResolution.height', 1080)
     setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.778)
 
  
 def focalLength12():
-#loop over all cameras that are selected (transform node)
-    for each_cam_tf in cmds.ls(sl=True):
-#find the shape node
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-#only set attr if a camera shape was found 
-        if cam_shp:
-#set focal length
-            cmds.setAttr(cam_shp[0]+".fl", 12)
-
-
+    cmds.setAttr(getSelectedCamera()+".fl", 12)
+      
 def focalLength14():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 14)
-                        
+    cmds.setAttr(getSelectedCamera()+".fl", 14)
+                                   
 def focalLength16():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 16)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 16)
+                        
 def focalLength18():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 18)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 18)
+                      
 def focalLength21():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 21)
+    cmds.setAttr(getSelectedCamera()+".fl", 21)
             
 def focalLength25():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 25)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 25)
+                     
 def focalLength27():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 27)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 27)
+                    
 def focalLength32():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 32)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 32)
+               
 def focalLength35():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 35)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 35)
+              
 def focalLength40():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 40)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 40)
+                
 def focalLength50():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 50)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 50)
+    
 def focalLength65():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 65)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 65)
+   
 def focalLength75():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 75)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 75)
+       
 def focalLength100():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 100)
-            
+    cmds.setAttr(getSelectedCamera()+".fl", 100)
+  
 def focalLength135():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 135)
+    cmds.setAttr(getSelectedCamera()+".fl", 135)
             
 def focalLength150():
-    for each_cam_tf in cmds.ls(sl=True):
-        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
-        if cam_shp:
-            cmds.setAttr(cam_shp[0]+".fl", 150)
+    cmds.setAttr(getSelectedCamera()+".fl", 150)
+  
          
 def addDepthofField():
     #Set DOF to be true
