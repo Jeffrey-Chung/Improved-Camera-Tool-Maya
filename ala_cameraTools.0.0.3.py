@@ -127,11 +127,15 @@ def focalLength150():
             cmds.setAttr(cam_shp[0]+".fl", 150)
          
 def addDepthofField():
-    cmds.setAttr('ShotCameraShape1.depthOfField', True)
+    #Set DOF to be true
+    for each_cam_tf in cmds.ls(sl=True):
+        cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
+        if cam_shp:
+            cmds.setAttr(cam_shp[0]+".depthOfField", True)
+
 
 
 def cameraTools():
-    
     if cmds.window('cameraTools', exists = True):
         cmds.deleteUI('cameraTools')
         
