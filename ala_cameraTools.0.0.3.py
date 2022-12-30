@@ -5,7 +5,7 @@ import maya.cmds as cmds
 
 # creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
 def createCamera():
-    cameraName = cmds.camera(horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
+    cameraName = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
     setResolutionWidth = cmds.setAttr('defaultResolution.width', 1920)
     setResolutionHeight = cmds.setAttr('defaultResolution.height', 1080)
     setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.778)
@@ -37,109 +37,97 @@ def focalLength12():
 
 
 def focalLength14():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 14)
                         
 def focalLength16():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 16)
             
 def focalLength18():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 18)
             
 def focalLength21():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 21)
             
 def focalLength25():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 25)
             
 def focalLength27():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 27)
             
 def focalLength32():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 32)
             
 def focalLength35():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 35)
             
 def focalLength40():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 40)
             
 def focalLength50():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 50)
             
 def focalLength65():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 65)
             
 def focalLength75():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 75)
             
 def focalLength100():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 100)
             
 def focalLength135():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 135)
             
 def focalLength150():
-
     for each_cam_tf in cmds.ls(sl=True):
         cam_shp = cmds.listRelatives(each_cam_tf,type="camera")
         if cam_shp:
             cmds.setAttr(cam_shp[0]+".fl", 150)
+         
+def addDepthofField():
+    cmds.setAttr('ShotCameraShape1.depthOfField', True)
 
 
 def cameraTools():
@@ -186,6 +174,8 @@ def cameraTools():
     cmds.menuItem(label = '100mm', command = 'focalLength100()')
     cmds.menuItem(label = '135mm', command = 'focalLength135()')
     cmds.menuItem(label = '150mm', command = 'focalLength150()')
+    
+    cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
     cmds.showWindow('cameraTools')
    
 
