@@ -149,8 +149,6 @@ def cameraTools():
         
     cmds.window('cameraTools', resizeToFitChildren=True, menuBar=True)
    
-    
-#    cmds.window('cameraTools', widthHeight=(200, 450))
 
     cmds.columnLayout(adjustableColumn = True, bgc = [0, 1, 1])
     
@@ -171,11 +169,6 @@ def cameraTools():
     cmds.button(label = 'AlexaLF Settings', command = 'alexaCamera()', width=100, height=100, bgc = [1, 1, 1])
     
 
-    #cmds.separator(h=30)
-    #cmds.text('Sets focal length on selected cameras')
-    #cmds.separator(h=10)
-    
-
     cmds.menu(label = "Set Focal Length on Selected Cameras", tearOff = True)
     cmds.menuItem(label = '12mm', command = 'focalLength12()')
     cmds.menuItem(label = '14mm', command = 'focalLength14()')
@@ -193,28 +186,6 @@ def cameraTools():
     cmds.menuItem(label = '100mm', command = 'focalLength100()')
     cmds.menuItem(label = '135mm', command = 'focalLength135()')
     cmds.menuItem(label = '150mm', command = 'focalLength150()')
-    
-
-
-    
-    
-    #cmds.button(label = '12mm', command = 'focalLength12()')
-    #cmds.button(label = '14mm', command = 'focalLength14()')
-    #cmds.button(label = '16mm', command = 'focalLength16()')
-    #cmds.button(label = '18mm', command = 'focalLength18()')
-    #cmds.button(label = '21mm', command = 'focalLength21()')
-    #cmds.button(label = '25mm', command = 'focalLength25()')
-    #cmds.button(label = '27mm', command = 'focalLength27()')
-    #cmds.button(label = '32mm', command = 'focalLength32()')
-    #cmds.button(label = '35mm', command = 'focalLength35()')
-    #cmds.button(label = '40mm', command = 'focalLength40()')
-    #cmds.button(label = '50mm', command = 'focalLength50()')
-    #cmds.button(label = '65mm', command = 'focalLength65()')
-    #cmds.button(label = '75mm', command = 'focalLength75()')
-    #cmds.button(label = '100mm', command = 'focalLength100()')
-    #cmds.button(label = '135mm', command = 'focalLength135()')
-    #cmds.button(label = '150mm', command = 'focalLength150()')
-    
     cmds.showWindow('cameraTools')
    
 
