@@ -86,6 +86,10 @@ def addDepthofField():
     cmds.parent('locator1', shotCamera, r=True) #parent first locator under the selected camera
     cmds.rename('locator2', 'AimLocator') #rename locator closer to the object to 'AimLocator'
     cmds.connectAttr('distanceDimensionShape1.distance', shotCamera+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
+    #do the same for arnold render view
+    cmds.setAttr(shotCamera + ".aiEnableDOF", True)
+    cmds.setAttr(shotCamera + ".aiApertureSize", 2.8)
+    cmds.connectAttr('distanceDimensionShape1.distance', shotCamera+'.aiFocusDistance')
     
          
             
