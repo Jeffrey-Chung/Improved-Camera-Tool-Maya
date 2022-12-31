@@ -13,9 +13,9 @@ def getSelectedCameraShape():
 
 #function to get selected camera transform on the outliner
 def getSelectedCameraTransform():
-    for each_camera_transform in cmds.ls(sl=True): #loop over all cameras that are selected (transform node)
+    for each_camera_transform in cmds.ls(sl=True, type="transform"): #loop over all cameras that are selected (transform node)
         return each_camera_transform #return the transform node
-
+        
     
 #set default resolution to 1920 * 1080 and aspect ratio
 def setDefaultSettings():
