@@ -3,13 +3,19 @@
 
 import maya.cmds as cmds
 
-#function to get selected camera on the outliner
-def getSelectedCamera():
+#function to get selected camera shape on the outliner
+def getSelectedCameraShape():
     for each_camera_transform in cmds.ls(sl=True): #loop over all cameras that are selected (transform node)
         camera_shape = cmds.listRelatives(each_camera_transform,type="camera") #find the shape node
         if camera_shape: #only set attr if a camera shape was found 
             return camera_shape[0] #return shape node
     return None 
+
+#function to get selected camera transform on the outliner
+def getSelectedCameraTransform():
+    for each_camera_transform in cmds.ls(sl=True): #loop over all cameras that are selected (transform node)
+        return each_camera_transform #return the transform node
+
     
 #set default resolution to 1920 * 1080 and aspect ratio
 def setDefaultSettings():
@@ -17,7 +23,7 @@ def setDefaultSettings():
     setResolutionHeight = cmds.setAttr('defaultResolution.height', 1080)
     setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.778)
     
-    
+
 # creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
 def createCamera():
     cameraName = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
@@ -26,28 +32,31 @@ def createCamera():
 
 # Sets the camera Aperature made by the pipeline to match an AlexaLF camera. And sets the scene Render Settings to HD.
 def alexaCamera():
-    cmds.setAttr(getSelectedCamera()+".horizontalFilmAperture", 1.247)
-    cmds.setAttr(getSelectedCamera()+".verticalFilmAperture", 0.702)
-    cmds.setAttr(getSelectedCamera()+".farClipPlane", 100000)
+    cmds.setAttr(getSelectedCameraShape()+".horizontalFilmAperture", 1.247)
+    cmds.setAttr(getSelectedCameraShape()+".verticalFilmAperture", 0.702)
+    cmds.setAttr(getSelectedCameraShape()+".farClipPlane", 100000)
     setDefaultSettings()
 
 #Set the focal length of the camera
 def adjustFocalLength(focalLength):
-    cmds.setAttr(getSelectedCamera()+".fl", focalLength)
+    cmds.setAttr(getSelectedCameraShape()+".fl", focalLength)
   
          
 def addDepthofField():
-    shotCamera = getSelectedCamera()
-    cmds.setAttr(shotCamera+".depthOfField", True) #Set DOF to be true
-    cmds.setAttr(shotCamera+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
-    cmds.distanceDimension(sp=(0, 0, 0), ep=(-38.579, -21.701, -82.295)) #Use distance tool to create 2 locators between camera and object
-    cmds.parent('locator1', shotCamera, r=True) #parent first locator under the selected camera
+    shotCameraShape = getSelectedCameraShape()
+    shotCameraTransform = getSelectedCameraTransform()
+    cmds.setAttr(shotCameraShape+".depthOfField", True) #Set DOF to be true
+    cmds.setAttr(shotCameraShape+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
+    
+    #Use distance tool to create 2 locators between camera and object
+    distanceDimensionShape = cmds.distanceDimension(sp=(cmds.getAttr(shotCameraTransform + '.translateX'), cmds.getAttr(shotCameraTransform + '.translateY'), cmds.getAttr(shotCameraTransform + '.translateZ')), ep=(cmds.getAttr('pSphere1.translateX'), cmds.getAttr('pSphere1.translateY'), cmds.getAttr('pSphere1.translateZ'))) 
+    cmds.parent('locator1', shotCameraShape, r=True) #parent first locator under the selected camera
     cmds.rename('locator2', 'AimLocator') #rename locator closer to the object to 'AimLocator'
-    cmds.connectAttr('distanceDimensionShape1.distance', shotCamera+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
+    cmds.connectAttr(distanceDimensionShape + '.distance', shotCameraShape+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
     #do the same for arnold render view
-    cmds.setAttr(shotCamera + ".aiEnableDOF", True)
-    cmds.setAttr(shotCamera + ".aiApertureSize", 2.8)
-    cmds.connectAttr('distanceDimensionShape1.distance', shotCamera+'.aiFocusDistance')
+    cmds.setAttr(shotCameraShape + ".aiEnableDOF", True)
+    cmds.setAttr(shotCameraShape + ".aiApertureSize", 2.8)
+    cmds.connectAttr(distanceDimensionShape + '.distance', shotCameraShape+'.aiFocusDistance')
     
          
             
