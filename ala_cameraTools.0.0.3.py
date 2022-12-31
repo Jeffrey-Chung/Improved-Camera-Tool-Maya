@@ -86,6 +86,7 @@ def cameraTools():
     
     cmds.separator(h=50)
     cmds.text('Depth of Field: Set DOF Rig')
+    cmds.text('Make sure that only the camera is selected in the editor before you click')
     cmds.separator(h=50)
     
     cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
