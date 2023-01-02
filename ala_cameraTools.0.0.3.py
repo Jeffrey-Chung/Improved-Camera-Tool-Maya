@@ -9,14 +9,19 @@ def getSelectedCameraShape():
         camera_shape = cmds.listRelatives(each_camera_transform,type="camera") #find the shape node
         if camera_shape: #only set attr if a camera shape was found 
             return camera_shape[0] #return shape node
-    return None 
+    
 
 #function to get selected camera transform on the outliner
 def getSelectedCameraTransform():
-    for each_camera_transform in cmds.ls(sl=True, type="transform"): #loop over all cameras that are selected (transform node)
-        return each_camera_transform #return the transform node
-        
+    cameraTransform = cmds.listRelatives(getSelectedCameraShape(), parent=True) #find the camera shape's parent to get its transform
+    return cameraTransform[0] #return the transform node
     
+def getObjecttoFocus():
+    for selectedObject in cmds.ls(sl=True):
+        if selectedObject != getSelectedCameraTransform():
+            return selectedObject
+    
+                  
 #set default resolution to 1920 * 1080 and aspect ratio
 def setDefaultSettings():
     setResolutionWidth = cmds.setAttr('defaultResolution.width', 1920)
@@ -45,11 +50,12 @@ def adjustFocalLength(focalLength):
 def addDepthofField():
     shotCameraShape = getSelectedCameraShape()
     shotCameraTransform = getSelectedCameraTransform()
+    objectToFocus = getObjecttoFocus()
     cmds.setAttr(shotCameraShape+".depthOfField", True) #Set DOF to be true
     cmds.setAttr(shotCameraShape+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
     
     #Use distance tool to create 2 locators between camera and object
-    distanceDimensionShape = cmds.distanceDimension(sp=(cmds.getAttr(shotCameraTransform + '.translateX'), cmds.getAttr(shotCameraTransform + '.translateY'), cmds.getAttr(shotCameraTransform + '.translateZ')), ep=(cmds.getAttr('pSphere1.translateX'), cmds.getAttr('pSphere1.translateY'), cmds.getAttr('pSphere1.translateZ'))) 
+    distanceDimensionShape = cmds.distanceDimension(sp=(cmds.getAttr(shotCameraTransform + '.translateX'), cmds.getAttr(shotCameraTransform + '.translateY'), cmds.getAttr(shotCameraTransform + '.translateZ')), ep=(cmds.getAttr(objectToFocus + '.translateX'), cmds.getAttr(objectToFocus + '.translateY'), cmds.getAttr(objectToFocus + '.translateZ'))) 
     cmds.parent('locator1', shotCameraShape, r=True) #parent first locator under the selected camera
     cmds.rename('locator2', 'AimLocator') #rename locator closer to the object to 'AimLocator'
     cmds.connectAttr(distanceDimensionShape + '.distance', shotCameraShape+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
@@ -86,7 +92,9 @@ def cameraTools():
     
     cmds.separator(h=50)
     cmds.text('Depth of Field: Set DOF Rig')
-    cmds.text('Make sure that only the camera is selected in the editor before you click')
+    cmds.text('1. Select your camera in the outliner')
+    cmds.text('2. Select your object to focus on in the outliner')
+    cmds.text('3. Apply DOF by clicking on the button below')
     cmds.separator(h=50)
     
     cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
