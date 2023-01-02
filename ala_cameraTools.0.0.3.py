@@ -40,6 +40,10 @@ def alexaCamera():
 #Set the focal length of the camera
 def adjustFocalLength(focalLength):
     cmds.setAttr(getSelectedCameraShape()+".fl", focalLength)
+    
+#Set the locator scale of the camera
+def adjustLocatorScale(locatorScale):
+    cmds.setAttr(getSelectedCameraShape()+".locatorScale", locatorScale)
   
          
 def addDepthofField():
@@ -91,7 +95,7 @@ def cameraTools():
     
     cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
 
-    cmds.menu(label = "Set Focal Length on Selected Cameras", tearOff = True)
+    cmds.menu(label = "Set Focal Length", tearOff = True)
     cmds.menuItem(label = '12mm', command = 'adjustFocalLength(12)')
     cmds.menuItem(label = '14mm', command = 'adjustFocalLength(14)')
     cmds.menuItem(label = '16mm', command = 'adjustFocalLength(16)')
@@ -108,6 +112,20 @@ def cameraTools():
     cmds.menuItem(label = '100mm', command = 'adjustFocalLength(100)')
     cmds.menuItem(label = '135mm', command = 'adjustFocalLength(135)')
     cmds.menuItem(label = '150mm', command = 'adjustFocalLength(150)')
+    
+    cmds.menu(label = "Set Locator Scale", tearOff = True)
+    cmds.menuItem(label = '5mm', command = 'adjustLocatorScale(5)')
+    cmds.menuItem(label = '10mm', command = 'adjustLocatorScale(10)')
+    cmds.menuItem(label = '15mm', command = 'adjustLocatorScale(15)')
+    cmds.menuItem(label = '20mm', command = 'adjustLocatorScale(20)')
+    cmds.menuItem(label = '25mm', command = 'adjustLocatorScale(25)')
+    cmds.menuItem(label = '30mm', command = 'adjustLocatorScale(30)')
+    cmds.menuItem(label = '35mm', command = 'adjustLocatorScale(35)')
+    cmds.menuItem(label = '45mm', command = 'adjustLocatorScale(45)')
+    cmds.menuItem(label = '55mm', command = 'adjustLocatorScale(55)')
+    cmds.menuItem(label = '70mm', command = 'adjustLocatorScale(70)')
+    cmds.menuItem(label = '85mm', command = 'adjustLocatorScale(85)')
+    cmds.menuItem(label = '100mm', command = 'adjustLocatorScale(100)')
     
     cmds.showWindow('cameraTools')
    
