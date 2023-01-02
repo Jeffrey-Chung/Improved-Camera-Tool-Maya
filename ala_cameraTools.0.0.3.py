@@ -20,7 +20,12 @@ def getObjecttoFocus():
     for selectedObject in cmds.ls(sl=True):
         if selectedObject != getSelectedCameraTransform():
             return selectedObject
-    
+            
+def getAllLocatorTransform():
+    locators = cmds.ls(exactType=('locator'), l=True) or []
+    locatorTransform = cmds.listRelatives(locators, parent=True)
+    return locatorTransform
+
                   
 #set default resolution to 1920 * 1080 and aspect ratio
 def setDefaultSettings():
@@ -55,9 +60,12 @@ def addDepthofField():
     cmds.setAttr(shotCameraShape+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
     
     #Use distance tool to create 2 locators between camera and object
-    distanceDimensionShape = cmds.distanceDimension(sp=(cmds.getAttr(shotCameraTransform + '.translateX'), cmds.getAttr(shotCameraTransform + '.translateY'), cmds.getAttr(shotCameraTransform + '.translateZ')), ep=(cmds.getAttr(objectToFocus + '.translateX'), cmds.getAttr(objectToFocus + '.translateY'), cmds.getAttr(objectToFocus + '.translateZ'))) 
-    cmds.parent('locator1', shotCameraShape, r=True) #parent first locator under the selected camera
-    cmds.rename('locator2', 'AimLocator') #rename locator closer to the object to 'AimLocator'
+    distanceDimensionShape = cmds.distanceDimension(sp=(cmds.getAttr(shotCameraTransform + '.translateX'), cmds.getAttr(shotCameraTransform + '.translateY'), cmds.getAttr(shotCameraTransform + '.translateZ')), ep=(cmds.getAttr(objectToFocus + '.translateX'), cmds.getAttr(objectToFocus + '.translateY'), cmds.getAttr(objectToFocus + '.translateZ')))
+    allLocatorTransforms = getAllLocatorTransform()
+    for locatorTransform in allLocatorTransforms:
+         if cmds.getAttr(locatorTransform + '.translateX') == cmds.getAttr(shotCameraTransform + '.translateX') and cmds.getAttr(locatorTransform  + '.translateY') == cmds.getAttr(shotCameraTransform + '.translateY') and cmds.getAttr(locatorTransform + '.translateZ') == cmds.getAttr(shotCameraTransform + '.translateZ'):
+             cmds.parent(locatorTransform, shotCameraTransform, r=True) #parent first locator under the selected camera     
+    #cmds.rename('locator2', 'AimLocator') #rename locator closer to the object to 'AimLocator'
     cmds.connectAttr(distanceDimensionShape + '.distance', shotCameraShape+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
     #do the same for arnold render view
     cmds.setAttr(shotCameraShape + ".aiEnableDOF", True)
