@@ -16,17 +16,19 @@ def getSelectedCameraTransform():
     cameraTransform = cmds.listRelatives(getSelectedCameraShape(), parent=True) #find the camera shape's parent to get its transform
     return cameraTransform[0] #return the transform node
     
+#function to get the object to focus for DOF
 def getObjecttoFocus():
     for selectedObject in cmds.ls(sl=True):
         if selectedObject != getSelectedCameraTransform():
             return selectedObject
             
+#function to get all locator transform nodes in the scene
 def getAllLocatorTransform():
     locators = cmds.ls(exactType=('locator'), l=True) or []
     locatorTransform = cmds.listRelatives(locators, parent=True)
     return locatorTransform
 
-                  
+
 #set default resolution to 1920 * 1080 and aspect ratio
 def setDefaultSettings():
     setResolutionWidth = cmds.setAttr('defaultResolution.width', 1920)
@@ -50,19 +52,26 @@ def alexaCamera():
 #Set the focal length of the camera
 def adjustFocalLength(focalLength):
     cmds.setAttr(getSelectedCameraShape()+".fl", focalLength)
+    
+#Set the locator scale of the camera
+def adjustLocatorScale(locatorScale):
+    cmds.setAttr(getSelectedCameraShape()+".locatorScale", locatorScale)
   
-         
+#add DOF rig         
 def addDepthofField():
+    #get selected camera shape, transform and objec to focus for DOF
     shotCameraShape = getSelectedCameraShape()
     shotCameraTransform = getSelectedCameraTransform()
     objectToFocus = getObjecttoFocus()
+
     cmds.setAttr(shotCameraShape+".depthOfField", True) #Set DOF to be true
     cmds.setAttr(shotCameraShape+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
     
-    #Use distance tool to create 2 locators between camera and object
+    #Use distance tool to create 2 locators between camera and selected object
     distanceDimensionShape = cmds.distanceDimension(sp=(cmds.getAttr(shotCameraTransform + '.translateX'), cmds.getAttr(shotCameraTransform + '.translateY'), cmds.getAttr(shotCameraTransform + '.translateZ')), ep=(cmds.getAttr(objectToFocus + '.translateX'), cmds.getAttr(objectToFocus + '.translateY'), cmds.getAttr(objectToFocus + '.translateZ')))
-    allLocatorTransforms = getAllLocatorTransform()
+    allLocatorTransforms = getAllLocatorTransform() #get all locator transforms
     for locatorTransform in allLocatorTransforms:
+        #check if that locator is the same position as the camera to parent
          if cmds.getAttr(locatorTransform + '.translateX') == cmds.getAttr(shotCameraTransform + '.translateX') and cmds.getAttr(locatorTransform  + '.translateY') == cmds.getAttr(shotCameraTransform + '.translateY') and cmds.getAttr(locatorTransform + '.translateZ') == cmds.getAttr(shotCameraTransform + '.translateZ'):
              cmds.parent(locatorTransform, shotCameraTransform, r=True) #parent first locator under the selected camera     
     #cmds.rename('locator2', 'AimLocator') #rename locator closer to the object to 'AimLocator'
@@ -107,7 +116,7 @@ def cameraTools():
     
     cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
 
-    cmds.menu(label = "Set Focal Length on Selected Cameras", tearOff = True)
+    cmds.menu(label = "Set Focal Length", tearOff = True)
     cmds.menuItem(label = '12mm', command = 'adjustFocalLength(12)')
     cmds.menuItem(label = '14mm', command = 'adjustFocalLength(14)')
     cmds.menuItem(label = '16mm', command = 'adjustFocalLength(16)')
@@ -124,6 +133,20 @@ def cameraTools():
     cmds.menuItem(label = '100mm', command = 'adjustFocalLength(100)')
     cmds.menuItem(label = '135mm', command = 'adjustFocalLength(135)')
     cmds.menuItem(label = '150mm', command = 'adjustFocalLength(150)')
+    
+    cmds.menu(label = "Set Locator Scale", tearOff = True)
+    cmds.menuItem(label = '5mm', command = 'adjustLocatorScale(5)')
+    cmds.menuItem(label = '10mm', command = 'adjustLocatorScale(10)')
+    cmds.menuItem(label = '15mm', command = 'adjustLocatorScale(15)')
+    cmds.menuItem(label = '20mm', command = 'adjustLocatorScale(20)')
+    cmds.menuItem(label = '25mm', command = 'adjustLocatorScale(25)')
+    cmds.menuItem(label = '30mm', command = 'adjustLocatorScale(30)')
+    cmds.menuItem(label = '35mm', command = 'adjustLocatorScale(35)')
+    cmds.menuItem(label = '45mm', command = 'adjustLocatorScale(45)')
+    cmds.menuItem(label = '55mm', command = 'adjustLocatorScale(55)')
+    cmds.menuItem(label = '70mm', command = 'adjustLocatorScale(70)')
+    cmds.menuItem(label = '85mm', command = 'adjustLocatorScale(85)')
+    cmds.menuItem(label = '100mm', command = 'adjustLocatorScale(100)')
     
     cmds.showWindow('cameraTools')
    
