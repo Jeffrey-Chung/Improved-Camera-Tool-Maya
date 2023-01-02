@@ -63,6 +63,7 @@ def addDepthofField():
     shotCameraShape = getSelectedCameraShape()
     shotCameraTransform = getSelectedCameraTransform()
     objectToFocus = getObjecttoFocus()
+    locatorNearObject = None 
 
     cmds.setAttr(shotCameraShape+".depthOfField", True) #Set DOF to be true
     cmds.setAttr(shotCameraShape+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
@@ -73,8 +74,8 @@ def addDepthofField():
     for locatorTransform in allLocatorTransforms:
         #check if that locator is the same position as the camera to parent
          if cmds.getAttr(locatorTransform + '.translateX') == cmds.getAttr(shotCameraTransform + '.translateX') and cmds.getAttr(locatorTransform  + '.translateY') == cmds.getAttr(shotCameraTransform + '.translateY') and cmds.getAttr(locatorTransform + '.translateZ') == cmds.getAttr(shotCameraTransform + '.translateZ'):
-             cmds.parent(locatorTransform, shotCameraTransform, r=True) #parent first locator under the selected camera     
-    #cmds.rename('locator2', 'AimLocator') #rename locator closer to the object to 'AimLocator'
+             cmds.parent(locatorTransform, shotCameraTransform) #parent first locator under the selected camera    
+    #cmds.rename(locatorNearObject, 'AimLocator') #rename locator closer to the object to 'AimLocator'
     cmds.connectAttr(distanceDimensionShape + '.distance', shotCameraShape+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
     #do the same for arnold render view
     cmds.setAttr(shotCameraShape + ".aiEnableDOF", True)
