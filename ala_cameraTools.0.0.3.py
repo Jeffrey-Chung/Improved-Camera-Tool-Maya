@@ -92,14 +92,13 @@ def cameraTools():
     if cmds.window('cameraTool', exists = True):
         cmds.deleteUI('cameraTool')
         
-    cmds.window('cameraTool', menuBar=True, widthHeight=(300,150), resizeToFitChildren=True)
+    cmds.window('cameraTool', menuBar=True, widthHeight=(150,150), resizeToFitChildren=True)
 
     cmds.columnLayout(adjustableColumn = True)
     cmds.separator(h=1)
       
     cmds.separator(h=30)
-    cmds.text('PREVIS: Creates an AlexaLF camera')
-    cmds.text('Sets the correct render settings')
+    cmds.text('PREVIS: Creates an AlexaLF camera \n Sets the correct render settings')
     cmds.separator(h=30)
     
     cmds.button(label = 'Create Camera', command = 'createCamera()')
@@ -112,9 +111,8 @@ def cameraTools():
     
     cmds.separator(h=30)
     cmds.text('Depth of Field: Set DOF Rig')
-    cmds.text('1. Select your camera in the outliner')
-    cmds.text('2. Select your object to focus on in the outliner')
-    cmds.text('3. Apply DOF by clicking on the button below')
+    cmds.text('1. Select your camera in the outliner \n 2. Select your object to focus on in the outliner \n 3. Apply DOF by clicking on the button below')
+    cmds.text("\n\nNOTE: if the focused object's coordinates is at the origin, \nthe aim locator will not spawn but DOF will still be applied as usual")
     cmds.separator(h=30)
     
     cmds.button(label = 'DOF Settings', command = 'addDepthofField()')
