@@ -72,7 +72,6 @@ def addDepthofField():
     shotCameraShape = getSelectedCameraShape()
     shotCameraTransform = getSelectedCameraTransform()
     objectToFocus = getObjecttoFocus()
-    locatorNearObject = None 
 
     cmds.setAttr(shotCameraShape+".depthOfField", True) #Set DOF to be true
     cmds.setAttr(shotCameraShape+".locatorScale", 30) #Set to a larger locator scale instead of manualling scaling the camera
@@ -92,27 +91,28 @@ def cameraTools():
     if cmds.window('cameraTool', exists = True):
         cmds.deleteUI('cameraTool')
         
-    cmds.window('cameraTool', menuBar=True, widthHeight=(150,150), resizeToFitChildren=True)
+    cmds.window('cameraTool', menuBar=True, widthHeight=(100,100), resizeToFitChildren=True)
 
     cmds.columnLayout(adjustableColumn = True)
     cmds.separator(h=1)
       
     cmds.separator(h=30)
-    cmds.text('PREVIS: Creates an AlexaLF camera \n Sets the correct render settings')
+    cmds.text('PREVIS: Creates an AlexaLF camera', fn='fixedWidthFont')
+    cmds.text('Sets the correct render settings')
     cmds.separator(h=30)
     
     cmds.button(label = 'Create Camera', command = 'createCamera()')
 
     cmds.separator(h=30)
-    cmds.text('LAYOUT: Sets AlexaLF Settings')
+    cmds.text('LAYOUT: Sets AlexaLF Settings', fn='fixedWidthFont')
     cmds.separator(h=30)
     
     cmds.button(label = 'AlexaLF Settings', command = 'alexaCamera()')
     
     cmds.separator(h=30)
-    cmds.text('Depth of Field: Set DOF Rig')
+    cmds.text('Depth of Field: Set DOF Rig', fn='fixedWidthFont')
     cmds.text('1. Select your camera in the outliner \n 2. Select your object to focus on in the outliner \n 3. Apply DOF by clicking on the button below')
-    cmds.text("\n\nNOTE: if the focused object's coordinates is at the origin, \nthe aim locator will not spawn but DOF will still be applied as usual")
+    cmds.text("\n\nNOTE: if the focused object's coordinates is at the origin, \nthe aim locator will not spawn but DOF will still be applied as usual", fn='smallObliqueLabelFont')
     cmds.separator(h=30)
     
     cmds.button(label = 'DOF Settings', command = 'addDepthofField()')
