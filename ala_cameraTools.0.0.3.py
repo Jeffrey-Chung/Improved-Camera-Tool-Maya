@@ -86,34 +86,35 @@ def addDepthofField():
          
             
 def cameraTools():
-    if cmds.window('cameraTools', exists = True):
-        cmds.deleteUI('cameraTools')
+    if cmds.window('cameraTool', exists = True):
+        cmds.deleteUI('cameraTool')
         
-    cmds.window('cameraTools', resizeToFitChildren=True, menuBar=True)
+    cmds.window('cameraTool', menuBar=True, widthHeight=(300,150), resizeToFitChildren=True)
 
-    cmds.columnLayout(adjustableColumn = True, bgc = [0, 1, 1])
+    cmds.columnLayout(adjustableColumn = True)
+    cmds.separator(h=1)
       
     cmds.separator(h=30)
     cmds.text('PREVIS: Creates an AlexaLF camera')
     cmds.text('Sets the correct render settings')
     cmds.separator(h=30)
     
-    cmds.button(label = 'Create Camera', command = 'createCamera()', width = 100, height = 100, bgc = [1, 1, 1])
+    cmds.button(label = 'Create Camera', command = 'createCamera()')
 
-    cmds.separator(h=50)
+    cmds.separator(h=30)
     cmds.text('LAYOUT: Sets AlexaLF Settings')
-    cmds.separator(h=50)
+    cmds.separator(h=30)
     
-    cmds.button(label = 'AlexaLF Settings', command = 'alexaCamera()', width=100, height=100, bgc = [1, 1, 1])
+    cmds.button(label = 'AlexaLF Settings', command = 'alexaCamera()')
     
-    cmds.separator(h=50)
+    cmds.separator(h=30)
     cmds.text('Depth of Field: Set DOF Rig')
     cmds.text('1. Select your camera in the outliner')
     cmds.text('2. Select your object to focus on in the outliner')
     cmds.text('3. Apply DOF by clicking on the button below')
-    cmds.separator(h=50)
+    cmds.separator(h=30)
     
-    cmds.button(label = 'DOF Settings', command = 'addDepthofField()', width=100, height=100, bgc = [1, 1, 1])
+    cmds.button(label = 'DOF Settings', command = 'addDepthofField()')
 
     cmds.menu(label = "Set Focal Length", tearOff = True)
     cmds.menuItem(label = '12mm', command = 'adjustFocalLength(12)')
@@ -147,7 +148,7 @@ def cameraTools():
     cmds.menuItem(label = '85mm', command = 'adjustLocatorScale(85)')
     cmds.menuItem(label = '100mm', command = 'adjustLocatorScale(100)')
     
-    cmds.showWindow('cameraTools')
+    cmds.showWindow('cameraTool')
    
 cameraTools()
 
