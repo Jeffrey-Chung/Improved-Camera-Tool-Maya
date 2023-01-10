@@ -85,7 +85,11 @@ def addDepthofField():
     cmds.setAttr(shotCameraShape + ".aiApertureSize", 2.8)
     cmds.connectAttr(distanceDimensionShape + '.distance', shotCameraShape+'.aiFocusDistance')
     
-         
+#disable Depth of Field Rig of camera
+def disableAllDepthofField(cameraShape, distanceDimensionShape):
+    cmds.delete(distanceDimensionShape)
+    cmds.setAttr(cameraShape+".depthOfField", False)
+    cmds.setAttr(cameraShape + ".aiEnableDOF", False)         
             
 def cameraTools():
     if cmds.window('cameraTool', exists = True):
@@ -115,7 +119,8 @@ def cameraTools():
     cmds.text("\n\nNOTE: if the focused object's coordinates is at the origin, \nthe aim locator will not spawn but DOF will still be applied as usual", fn='smallObliqueLabelFont')
     cmds.separator(h=30)
     
-    cmds.button(label = 'DOF Settings', command = 'addDepthofField()')
+    cmds.button(label = 'Enable DOF', command = 'addDepthofField()')
+    cmds.button(label = 'Disable DOF', command = 'disableAllDepthofField(getSelectedCameraShape(), getObjecttoFocus())')
 
     cmds.menu(label = "Set Focal Length", tearOff = True)
     cmds.menuItem(label = '12mm', command = 'adjustFocalLength(12)')
