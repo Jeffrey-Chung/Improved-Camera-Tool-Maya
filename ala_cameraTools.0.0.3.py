@@ -95,8 +95,9 @@ class cameraTools():
     def __init__(self):
         self.win = cmds.window(title="Camera Tool", menuBar=True, widthHeight=(100,100),resizeToFitChildren=True)
         self.tabs = cmds.tabLayout()
-        
-        
+        self.drawUI()
+
+    def drawUI(self):
         #first Tab
         firstTab = cmds.columnLayout(adjustableColumn = True)
         cmds.tabLayout(self.tabs, edit=True, tabLabel=[firstTab, 'Set Up Camera'])
@@ -134,39 +135,64 @@ class cameraTools():
         cmds.button(label = 'Disable DOF', command = 'disableAllDepthofField(getSelectedCameraShape(), getObjecttoFocus())')
         cmds.setParent("..")
         
-        cmds.menu(label = "Set Focal Length", tearOff = True)
-        cmds.menuItem(label = '12mm', command = 'adjustFocalLength(12)')
-        cmds.menuItem(label = '14mm', command = 'adjustFocalLength(14)')
-        cmds.menuItem(label = '16mm', command = 'adjustFocalLength(16)')
-        cmds.menuItem(label = '18mm', command = 'adjustFocalLength(18)')
-        cmds.menuItem(label = '21mm', command = 'adjustFocalLength(21)')
-        cmds.menuItem(label = '25mm', command = 'adjustFocalLength(25)')
-        cmds.menuItem(label = '27mm', command = 'adjustFocalLength(27)')
-        cmds.menuItem(label = '32mm', command = 'adjustFocalLength(32)')
-        cmds.menuItem(label = '35mm', command = 'adjustFocalLength(35)')
-        cmds.menuItem(label = '40mm', command = 'adjustFocalLength(40)')
-        cmds.menuItem(label = '50mm', command = 'adjustFocalLength(50)')
-        cmds.menuItem(label = '65mm', command = 'adjustFocalLength(65)')
-        cmds.menuItem(label = '75mm', command = 'adjustFocalLength(75)')
-        cmds.menuItem(label = '100mm', command = 'adjustFocalLength(100)')
-        cmds.menuItem(label = '135mm', command = 'adjustFocalLength(135)')
-        cmds.menuItem(label = '150mm', command = 'adjustFocalLength(150)')
-    
-        cmds.menu(label = "Set Locator Scale", tearOff = True)
-        cmds.menuItem(label = '5mm', command = 'adjustLocatorScale(5)')
-        cmds.menuItem(label = '10mm', command = 'adjustLocatorScale(10)')
-        cmds.menuItem(label = '15mm', command = 'adjustLocatorScale(15)')
-        cmds.menuItem(label = '20mm', command = 'adjustLocatorScale(20)')
-        cmds.menuItem(label = '25mm', command = 'adjustLocatorScale(25)')
-        cmds.menuItem(label = '30mm', command = 'adjustLocatorScale(30)')
-        cmds.menuItem(label = '35mm', command = 'adjustLocatorScale(35)')
-        cmds.menuItem(label = '45mm', command = 'adjustLocatorScale(45)')
-        cmds.menuItem(label = '55mm', command = 'adjustLocatorScale(55)')
-        cmds.menuItem(label = '70mm', command = 'adjustLocatorScale(70)')
-        cmds.menuItem(label = '85mm', command = 'adjustLocatorScale(85)')
-        cmds.menuItem(label = '100mm', command = 'adjustLocatorScale(100)')
+       
+        #Third Tab
+        thirdTab = cmds.columnLayout(adjustableColumn = True)
+        cmds.tabLayout(self.tabs, edit=True, tabLabel=[thirdTab, 'Camera Settings'])
+        cmds.separator(h=10)
+        cmds.text('Set Focal Length of Selected Camera', fn='fixedWidthFont')
+        cmds.text('1. Select your camera in the outliner \n 2. Select your focal length in the dropdown menu \n 3. Confirm your settings by clicking on the Confirm Focal Length Button\n')
+        self.FocalLengthOptionMenu = cmds.optionMenu(w = 250, label = "Set Focal Length (mm)")
+        #add menu item for all values
+        cmds.menuItem(label = "12")
+        cmds.menuItem(label = "14")
+        cmds.menuItem(label = "16")
+        cmds.menuItem(label = "18")
+        cmds.menuItem(label = "21")
+        cmds.menuItem(label = "25")
+        cmds.menuItem(label = "27")
+        cmds.menuItem(label = "32")
+        cmds.menuItem(label = "35")
+        cmds.menuItem(label = "40")
+        cmds.menuItem(label = "50")
+        cmds.menuItem(label = "65")
+        cmds.menuItem(label = "75")
+        cmds.menuItem(label = "100")
+        cmds.menuItem(label = "135")
+        cmds.menuItem(label = "150")
+        cmds.separator(h=30)
+        cmds.button(label = "Confirm Focal Length" , command=self.SetFocalLength)
         
-
+        cmds.separator(h=30)
+        cmds.text('Set Locator Scale of Selected Camera', fn='fixedWidthFont')
+        cmds.text('1. Select your camera in the outliner \n 2. Select your locator scale in the dropdown menu \n 3. Confirm your settings by clicking on the Confirm Locator Scale Button\n')
+        self.LocatorScaleOptionMenu = cmds.optionMenu(w = 250, label = "Set Locator Scale (mm)")
+        cmds.menuItem(label = '5')
+        cmds.menuItem(label = '10')
+        cmds.menuItem(label = '15')
+        cmds.menuItem(label = '20')
+        cmds.menuItem(label = '25')
+        cmds.menuItem(label = '30')
+        cmds.menuItem(label = '35')
+        cmds.menuItem(label = '45')
+        cmds.menuItem(label = '55')
+        cmds.menuItem(label = '70')
+        cmds.menuItem(label = '85')
+        cmds.menuItem(label = '100')
+        cmds.separator(h=30)
+        cmds.button(label = "Confirm Locator Scale" , command=self.SetLocatorScale)
+        cmds.setParent("..")
+      
         cmds.showWindow(self.win)
+        
+    #Set the focal length of the camera via the confirm focal length button
+    def SetFocalLength(self, *args):
+        menuVal = cmds.optionMenu(self.FocalLengthOptionMenu, q=True, value=True)
+        adjustFocalLength(float(menuVal)) 
+         
+    #Set the locator scale of the camera via the confirm locator scale button    
+    def SetLocatorScale(self, *args):
+        menuVal = cmds.optionMenu(self.LocatorScaleOptionMenu, q=True, value=True)
+        adjustLocatorScale(float(menuVal))  
    
 cameraTools()
