@@ -29,17 +29,30 @@ def getAllLocatorTransform():
     return locatorTransform
 
 
-#set default resolution to 1920 * 1080 and aspect ratio
+#set default resolution to 1920 * 1080 and aspect ratio (16/9)
 def setDefaultSettings():
     setResolutionWidth = cmds.setAttr('defaultResolution.width', 1920)
     setResolutionHeight = cmds.setAttr('defaultResolution.height', 1080)
     setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.778)
     
+#set settings to aspect ratio 4/3, resolution: 1024 * 760
+def setFourbyThreeSettings():
+    setResolutionWidth = cmds.setAttr('defaultResolution.width', 1024)
+    setResolutionHeight = cmds.setAttr('defaultResolution.height', 768)
+    setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.333)
 
-# creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
-def createCamera():
-    cameraName = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
-    setDefaultSettings()
+#set settings to aspect ratio 16/10, resolution: 1440 * 900
+def setSixtennbyTenSettings():
+    setResolutionWidth = cmds.setAttr('defaultResolution.width', 1440)
+    setResolutionHeight = cmds.setAttr('defaultResolution.height', 900)
+    setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.6)
+    
+#set settings to aspect ratio 3/2, resolution: 1080 * 720
+def setThreebyTwoSettings():
+    setResolutionWidth = cmds.setAttr('defaultResolution.width', 1080)
+    setResolutionHeight = cmds.setAttr('defaultResolution.height', 720)
+    setDeviceAspectRatio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.5)
+    
 
 
 # Sets the camera Aperature made by the pipeline to match an AlexaLF camera. And sets the scene Render Settings to HD.
@@ -103,10 +116,16 @@ class cameraTools():
         cmds.tabLayout(self.tabs, edit=True, tabLabel=[firstTab, 'Set Up Camera'])
         cmds.separator(h=10)
         cmds.text('PREVIS: Creates an AlexaLF camera', fn='fixedWidthFont')
-        cmds.text('Sets the correct render settings')
+        cmds.text('1. Select your aspect ratio for your camera \n 2. Click Create Camera Button to create the camera in the scene\n')
+        self.CameraOptionMenu = cmds.optionMenu(w = 250, label = "Set Aspect Ratio")
+        #add menu item for all values
+        cmds.menuItem(label = "4/3")
+        cmds.menuItem(label = "16/9")
+        cmds.menuItem(label = "16/10")
+        cmds.menuItem(label = "3/2")
         cmds.separator(h=30)
     
-        cmds.button(label = 'Create Camera', command = 'createCamera()')
+        cmds.button(label = 'Create Camera', command = self.CreateCamera)
 
         cmds.separator(h=30)
         cmds.text('LAYOUT: Sets AlexaLF Settings', fn='fixedWidthFont')
@@ -193,6 +212,19 @@ class cameraTools():
     #Set the locator scale of the camera via the confirm locator scale button    
     def SetLocatorScale(self, *args):
         menuVal = cmds.optionMenu(self.LocatorScaleOptionMenu, q=True, value=True)
-        adjustLocatorScale(float(menuVal))  
+        adjustLocatorScale(float(menuVal))
+        
+    # creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
+    def CreateCamera(self, *args):
+        menuVal = cmds.optionMenu(self.CameraOptionMenu, q=True, value=True)
+        cameraName = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
+        if menuVal == '4/3':
+            setFourbyThreeSettings()
+        elif menuVal == '16/9':
+            setDefaultSettings()
+        elif menuVal == '16/10':
+            setSixtennbyTenSettings()
+        elif menuVal == '3/2':
+            setThreebyTwoSettings()
    
 cameraTools()
