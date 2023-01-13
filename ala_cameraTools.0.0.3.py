@@ -105,7 +105,11 @@ def addDepthofField():
 def disableAllDepthofField(cameraShape, distanceDimensionShape):
     cmds.delete(distanceDimensionShape)
     cmds.setAttr(cameraShape+".depthOfField", False)
-    cmds.setAttr(cameraShape + ".aiEnableDOF", False)         
+    cmds.setAttr(cameraShape + ".aiEnableDOF", False) 
+
+def getOptionMenuValue(typeOfOptionMenu):
+    menuValue = cmds.optionMenu(typeOfOptionMenu, q=True, value=True)
+    return menuValue           
             
 class cameraTools():
     def __init__(self):
@@ -125,7 +129,7 @@ class cameraTools():
         cmds.separator(h=30)
         
         cmds.text('Set Aspect Ratio', fn='fixedWidthFont')
-        cmds.text('1. Select your aspect ratio for your camera \n 2. Click Confirm Aspect Ratio Button to set those settings\n')
+        cmds.text('1. Select your aspect ratio for your scene \n 2. Click Confirm Aspect Ratio Button to set those settings\n')
         self.CameraOptionMenu = cmds.optionMenu(w = 250, label = "Set Aspect Ratio")
         #add menu item for all values
         cmds.menuItem(label = "4/3")
@@ -210,27 +214,28 @@ class cameraTools():
         cmds.setParent("..")
       
         cmds.showWindow(self.win)
-        
+    
+    
     #Set the focal length of the camera via the confirm focal length button
     def SetFocalLength(self, *args):
-        menuVal = cmds.optionMenu(self.FocalLengthOptionMenu, q=True, value=True)
-        adjustFocalLength(float(menuVal)) 
+        menuValue = getOptionMenuValue(self.FocalLengthOptionMenu)
+        adjustFocalLength(float(menuValue)) 
          
     #Set the locator scale of the camera via the confirm locator scale button    
     def SetLocatorScale(self, *args):
-        menuVal = cmds.optionMenu(self.LocatorScaleOptionMenu, q=True, value=True)
-        adjustLocatorScale(float(menuVal))
+        menuValue = getOptionMenuValue(self.LocatorScaleOptionMenu)
+        adjustLocatorScale(float(menuValue))
         
     #adjust aspect ratio 
     def SetAspectRatio(self, *args):
-        menuVal = cmds.optionMenu(self.CameraOptionMenu, q=True, value=True)
-        if menuVal == '4/3':
+        menuValue = getOptionMenuValue(self.CameraOptionMenu)
+        if menuValue == '4/3':
             setFourbyThreeSettings()
-        elif menuVal == '16/9':
+        elif menuValue == '16/9':
             setDefaultSettings()
-        elif menuVal == '16/10':
+        elif menuValue == '16/10':
             setSixtennbyTenSettings()
-        elif menuVal == '3/2':
+        elif menuValue == '3/2':
             setThreebyTwoSettings()
    
 cameraTools()
