@@ -9,3 +9,5 @@
 4. Lots of refactored code into separate functions <br/>
 5. UI is reverted back to original colour scale temporarily for a search for better colour scheme than blue and white <br/>
 6. UI has reduced to minimal size <br />
+7. In relation to 3. both features can be adjusted via a dropdown menu on the 'Camera Settings' tab <br />
+8. Can disable DOF rig, but need to delete locators separately <br />
