@@ -21,6 +21,12 @@ def getObjecttoFocus():
     for selectedObject in cmds.ls(sl=True):
         if selectedObject != getSelectedCameraTransform():
             return selectedObject
+
+def getSelectedObject():
+    for selectedObject in cmds.ls(sl=True):
+        if selectedObject:
+            return selectedObject
+            
             
 #function to get all locator transform nodes in the scene
 def getAllLocatorTransform():
@@ -119,9 +125,26 @@ def disableAllDepthofField(cameraShape, distanceDimensionShape):
     cmds.setAttr(cameraShape+".depthOfField", False)
     cmds.setAttr(cameraShape + ".aiEnableDOF", False) 
 
+#get the value from each option menu to coduct event
 def getOptionMenuValue(typeOfOptionMenu):
     menuValue = cmds.optionMenu(typeOfOptionMenu, q=True, value=True)
-    return menuValue           
+    return menuValue  
+    
+#create circular turntable curve
+def createCurve(selectedObject):
+    turntableCircle = cmds.circle( nr=(0, 0, 1), c=(cmds.getAttr(selectedObject + '.translateX'), cmds.getAttr(selectedObject + '.translateY'), cmds.getAttr(selectedObject + '.translateZ')), r=1000)
+    cmds.setAttr(turntableCircle[0] + '.rotateX', -90)   
+
+def animateCamera():
+    selectedCamera = getSelectedCameraTransform()
+    selectedCurve = getObjecttoFocus()
+    motionPath = cmds.pathAnimation(selectedCurve, selectedCamera, startU = 0, endU = 180, follow = True, fractionMode = True)
+    cmds.setAttr(selectedCamera + '.rotateX', 0)
+    cmds.setAttr(selectedCamera + '.rotateY', 180)
+    cmds.currentTime(0)
+    cmds.setKeyframe(selectedCamera, attribute = 'rotateX' , value = 0, inTangentType="spline", outTangentType="spline")
+    cmds.currentTime(1)  
+    cmds.setKeyframe(selectedCamera, attribute = 'rotateY' , value = 180, inTangentType="spline", outTangentType="spline")  
             
 class cameraTools():
     def __init__(self):
@@ -226,6 +249,18 @@ class cameraTools():
         cmds.text("\n\nNOTE: You need to delete locators manually", fn='smallObliqueLabelFont')
         cmds.separator(h=20)
         cmds.button(label = 'Disable DOF', command = 'disableAllDepthofField(getSelectedCameraShape(), getObjecttoFocus())')
+        cmds.setParent("..")
+        
+        #Third tab
+        fourthTab = cmds.columnLayout(adjustableColumn = True)
+        cmds.tabLayout(self.tabs, edit=True, tabLabel=[fourthTab, 'Camera Animation'])
+        cmds.separator(h=10)
+        cmds.text('Turntable circle: Set circular curve', fn='fixedWidthFont')
+        cmds.text('1. Select your object in the outliner \n 2. Click on the button below to create the circle')
+        cmds.separator(h=20)
+        cmds.button(label = 'Create Circle', command = 'createCurve(getSelectedObject())')
+        cmds.separator(h=20)
+        cmds.button(label = 'Animate Camera', command = 'animateCamera()')
         cmds.setParent("..")
       
         cmds.showWindow(self.win)
