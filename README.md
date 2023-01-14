@@ -12,3 +12,4 @@
 7. In relation to 3. both features can be adjusted via a dropdown menu on the 'Camera Settings' tab <br />
 8. Can disable DOF rig, but need to delete locators separately <br />
 9. Can adjust aspect ratio of camera before creating one <br />
+10. DOF can also be applied via f stop, f stop value will be clamped to 64 maximum <br />
