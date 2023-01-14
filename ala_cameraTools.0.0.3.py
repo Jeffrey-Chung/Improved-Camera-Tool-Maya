@@ -138,13 +138,20 @@ def createCurve(selectedObject):
 def animateCamera():
     selectedCamera = getSelectedCameraTransform()
     selectedCurve = getObjecttoFocus()
-    motionPath = cmds.pathAnimation(selectedCurve, selectedCamera, startU = 0, endU = 180, follow = True, fractionMode = True)
+    motionPath = cmds.pathAnimation(selectedCurve, selectedCamera, stu = 0, etu = 180, follow = True, fractionMode = True)
     cmds.setAttr(selectedCamera + '.rotateX', 0)
     cmds.setAttr(selectedCamera + '.rotateY', 180)
     cmds.currentTime(0)
-    cmds.setKeyframe(selectedCamera, attribute = 'rotateX' , value = 0, inTangentType="spline", outTangentType="spline")
-    cmds.currentTime(1)  
-    cmds.setKeyframe(selectedCamera, attribute = 'rotateY' , value = 180, inTangentType="spline", outTangentType="spline")  
+    cmds.setKeyframe(selectedCamera, attribute = 'rotateX' , value = 0, inTangentType="spline", outTangentType="spline") 
+    cmds.setKeyframe(selectedCamera, attribute = 'rotateY' , value = -180, inTangentType="spline", outTangentType="spline")
+    cmds.currentTime(45)  
+    cmds.setKeyframe(selectedCamera, attribute = 'rotateY' , value = -135, inTangentType="spline", outTangentType="spline")
+    cmds.currentTime(90)  
+    cmds.setKeyframe(selectedCamera, attribute = 'rotateY' , value = 0, inTangentType="spline", outTangentType="spline")
+    cmds.currentTime(135)  
+    cmds.setKeyframe(selectedCamera, attribute = 'rotateY' , value = 135, inTangentType="spline", outTangentType="spline")
+    cmds.currentTime(180)
+    cmds.setKeyframe(selectedCamera, attribute = 'rotateY' , value = 180, inTangentType="spline", outTangentType="spline")    
             
 class cameraTools():
     def __init__(self):
