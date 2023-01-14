@@ -187,6 +187,7 @@ class cameraTools():
         cmds.separator(h=20)
     
         cmds.button(label = 'AlexaLF Settings', command = 'alexaCamera()')
+        cmds.separator(h=20)
         cmds.setParent("..")
 
     
@@ -235,6 +236,7 @@ class cameraTools():
         cmds.menuItem(label = '100')
         cmds.separator(h=20)
         cmds.button(label = "Confirm Locator Scale" , command=self.SetLocatorScale)
+        cmds.separator(h=20)
         cmds.setParent("..")
         
         #Third tab
@@ -267,7 +269,11 @@ class cameraTools():
         cmds.separator(h=20)
         cmds.button(label = 'Create Circle', command = 'createCurve(getSelectedObject())')
         cmds.separator(h=20)
+        cmds.text('Turntable animation: Setup Camera Animation', fn='fixedWidthFont')
+        cmds.text('1. Select your Camera on the outliner \n 2. Select your curve on the outliner \n 3. Click on the Animate Camera button to setup the animation')
+        cmds.separator(h=20)
         cmds.button(label = 'Animate Camera', command = 'animateCamera()')
+        cmds.separator(h=20)
         cmds.setParent("..")
       
         cmds.showWindow(self.win)
