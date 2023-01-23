@@ -153,7 +153,7 @@ def animate_camera():
     cmds.currentTime(180)
     cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 180, inTangentType="spline", outTangentType="spline")    
             
-class camera_tools():
+class CameraTool():
     def __init__(self):
         self.win = cmds.window(title="Camera Tool", menuBar=True, widthHeight=(100,100),resizeToFitChildren=True)
         self.tabs = cmds.tabLayout()
@@ -301,4 +301,4 @@ class camera_tools():
         elif menu_value == '3/2':
             set_three_by_two_settings()
    
-camera_tools()
+CameraTool()
