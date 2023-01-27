@@ -22,6 +22,7 @@ def get_object_to_focus():
         if selected_object != get_selected_camera_transform():
             return selected_object
 
+#gets a selected object in general, likely to be used for other tools as well
 def get_selected_object():
     for selected_object in cmds.ls(sl=True):
         if selected_object:
@@ -135,14 +136,18 @@ def create_curve(selected_object):
     turntable_circle = cmds.circle( nr=(0, 0, 1), c=(cmds.getAttr(selected_object + '.translateX'), cmds.getAttr(selected_object + '.translateY'), cmds.getAttr(selected_object + '.translateZ')), r=1000)
     cmds.setAttr(turntable_circle[0] + '.rotateX', -90)   
 
+#create turntable animation for moving the camera
 def animate_camera():
     selected_camera = get_selected_camera_transform()
     selected_curve = get_object_to_focus()
-    motion_path = cmds.pathAnimation(selected_curve, selected_camera, stu = 0, etu = 180, follow = True, fractionMode = True)
-    cmds.setAttr(selected_camera + '.rotateX', 0)
+    motion_path = cmds.pathAnimation(selected_curve, selected_camera, stu = 0, etu = 180, follow = True, fractionMode = True) #attach the camera to the curve
+    cmds.setAttr(selected_camera + '.rotateX', 0) 
     cmds.setAttr(selected_camera + '.rotateY', 180)
+    
+    '''increase camera angle at the Y axis by 45 degrees in every quarter
+    both tangent types are spline to use a non-linear interpolation for a smoother animation for camera'''
     cmds.currentTime(0)
-    cmds.setKeyframe(selected_camera, attribute = 'rotateX' , value = 0, inTangentType="spline", outTangentType="spline") 
+    cmds.setKeyframe(selected_camera, attribute = 'rotateX' , value = 0, inTangentType="spline", outTangentType="spline") #can adjust this attribute to whatever angle you want depending on height of circle
     cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = -180, inTangentType="spline", outTangentType="spline")
     cmds.currentTime(45)  
     cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = -135, inTangentType="spline", outTangentType="spline")
@@ -153,14 +158,16 @@ def animate_camera():
     cmds.currentTime(180)
     cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 180, inTangentType="spline", outTangentType="spline")    
             
+#class for camera UI
 class CameraTool():
     def __init__(self):
         self.win = cmds.window(title="Camera Tool", menuBar=True, widthHeight=(100,100),resizeToFitChildren=True)
         self.tabs = cmds.tabLayout()
         self.draw_UI()
 
+    #function to draw the UI itself
     def draw_UI(self):
-        #first Tab
+        #first Tab: create camera + set aspect ratio
         first_tab = cmds.columnLayout(adjustableColumn = True)
         cmds.tabLayout(self.tabs, edit=True, tabLabel=[first_tab, 'Set Up Camera'])
         cmds.separator(h=10)
@@ -191,7 +198,7 @@ class CameraTool():
         cmds.setParent("..")
 
     
-        #Second Tab
+        #Second Tab: adjust camera settings via option menus
         second_tab = cmds.columnLayout(adjustableColumn = True)
         cmds.tabLayout(self.tabs, edit=True, tabLabel=[second_tab, 'Camera Settings'])
         cmds.separator(h=10)
@@ -239,7 +246,7 @@ class CameraTool():
         cmds.separator(h=20)
         cmds.setParent("..")
         
-        #Third tab
+        #Third tab: DOF options
         third_tab = cmds.columnLayout(adjustableColumn = True)
         cmds.tabLayout(self.tabs, edit=True, tabLabel=[third_tab, 'Depth of Field Options'])
         cmds.separator(h=10)
@@ -260,7 +267,7 @@ class CameraTool():
         cmds.button(label = 'Disable DOF', command = 'disable_depth_of_field(get_selected_camera_shape(), get_object_to_focus())')
         cmds.setParent("..")
         
-        #Third tab
+        #Fourth tab: Turntable camera animation
         fourth_tab = cmds.columnLayout(adjustableColumn = True)
         cmds.tabLayout(self.tabs, edit=True, tabLabel=[fourth_tab, 'Camera Animation'])
         cmds.separator(h=10)
