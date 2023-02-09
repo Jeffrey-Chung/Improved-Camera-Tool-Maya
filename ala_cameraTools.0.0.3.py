@@ -101,7 +101,7 @@ def basic_depth_of_field_settings():
     
     #Use distance tool to create 2 locators between camera and selected object
     distance_dimension_shape = cmds.distanceDimension(sp=(cmds.getAttr(shot_camera_transform + '.translateX'), cmds.getAttr(shot_camera_transform + '.translateY'), cmds.getAttr(shot_camera_transform + '.translateZ')), ep=(cmds.getAttr(object_to_focus + '.translateX'), cmds.getAttr(object_to_focus + '.translateY'), cmds.getAttr(object_to_focus + '.translateZ')))
-    assignLocators(shot_camera_transform, object_to_focus)
+    assign_locators(shot_camera_transform, object_to_focus)
     return shot_camera_shape, distance_dimension_shape
     
 
@@ -251,7 +251,9 @@ class CameraTool():
         cmds.tabLayout(self.tabs, edit=True, tabLabel=[third_tab, 'Depth of Field Options'])
         cmds.separator(h=10)
         cmds.text('Depth of Field: Set DOF Rig', fn='fixedWidthFont')
-        cmds.text('1. Select your camera in the outliner \n 2. Select your object to focus on in the outliner \n 3. Apply DOF by clicking on the button below')
+        cmds.text('1. Select your camera in the outliner \n 2. Select your object to focus on in the outliner')
+        cmds.text('Make sure both camera + object is selected', fn='obliqueLabelFont')
+        cmds.text('3. Apply DOF by clicking on the button below')
         cmds.text("\n\nNOTE: \n1. if the focused object's coordinates is at the origin, \nthe aim locator will not spawn but DOF will still be applied as usual", fn='smallObliqueLabelFont')
         cmds.text('2. For the f stop option, distance will be clamped to 64 units', fn='smallObliqueLabelFont')
         cmds.separator(h=20)
@@ -261,7 +263,9 @@ class CameraTool():
         cmds.button(label = 'Enable DOF f Stop', command = 'add_depth_of_field_fstop()')
         cmds.separator(h=20)
         cmds.text('Depth of Field: Disable DOF Rig', fn='fixedWidthFont')
-        cmds.text('1. Select your camera in the outliner \n 2. Select your distance dimension on in the outliner \n 3. Disable DOF by clicking on the button below')
+        cmds.text('1. Select your camera in the outliner \n 2. Select your distance dimension on in the outliner')
+        cmds.text('Make sure both camera + distance dimension is selected', fn='obliqueLabelFont')
+        cmds.text('3. Disable DOF by clicking on the button below')
         cmds.text("\n\nNOTE: You need to delete locators manually", fn='smallObliqueLabelFont')
         cmds.separator(h=20)
         cmds.button(label = 'Disable DOF', command = 'disable_depth_of_field(get_selected_camera_shape(), get_object_to_focus())')
@@ -277,7 +281,9 @@ class CameraTool():
         cmds.button(label = 'Create Circle', command = 'create_curve(get_selected_object())')
         cmds.separator(h=20)
         cmds.text('Turntable animation: Setup Camera Animation', fn='fixedWidthFont')
-        cmds.text('1. Select your Camera on the outliner \n 2. Select your curve on the outliner \n 3. Click on the Animate Camera button to setup the animation')
+        cmds.text('1. Select your Camera on the outliner \n 2. Select your curve on the outliner')
+        cmds.text('Make sure both camera + curve is selected', fn='obliqueLabelFont')
+        cmds.text('3. Click on the Animate Camera button to setup the animation')
         cmds.separator(h=20)
         cmds.button(label = 'Animate Camera', command = 'animate_camera()')
         cmds.separator(h=20)
@@ -307,5 +313,8 @@ class CameraTool():
             set_sixteen_by_ten_settings()
         elif menu_value == '3/2':
             set_three_by_two_settings()
-   
-CameraTool()
+def main():
+    CameraTool()
+
+if __name__ == '__main__':
+    main()
