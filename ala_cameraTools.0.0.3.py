@@ -16,6 +16,40 @@ aspect_ratios = [
     '3:2'
 ]
 
+focal_lengths = [
+    "12",
+    "14",
+    "16",
+    "18",
+    "21",
+    "25",
+    "27",
+    "32",
+    "35",
+    "45",
+    "55",
+    "65",
+    "75",
+    "100",
+    "135",
+    "150"
+]
+
+locator_scales = [
+    "5",
+    "10",
+    "15",
+    "20",
+    "25",
+    "30",
+    "35",
+    "45",
+    "55",
+    "70",
+    "85",
+    "100"
+]
+
 #function to get selected camera shape on the outliner
 def get_selected_camera_shape():
     for each_camera_transform in cmds.ls(sl=True): #loop over all cameras that are selected (transform node)
@@ -352,7 +386,7 @@ class CameraToolPySide(QMainWindow):
         aspect_ratio_header.setFont(header_font)
         first_tab_layout.addWidget(aspect_ratio_header)
 
-        aspect_ratio_instructions = QLabel(' Select your aspect ratio for your scene in the dropdown menu')
+        aspect_ratio_instructions = QLabel('Select your aspect ratio for your scene in the dropdown menu')
         first_tab_layout.addWidget(aspect_ratio_instructions)
 
         self.camera_dropdown = QComboBox()
@@ -369,7 +403,37 @@ class CameraToolPySide(QMainWindow):
         set_alexaLF_settings_button.clicked.connect(self.alexa_camera)
         first_tab_layout.addWidget(set_alexaLF_settings_button)
 
+        #Second Tab: adjust camera settings via option menus
+        second_tab = QWidget()
+        second_tab_layout = QVBoxLayout()
+        second_tab.setLayout(second_tab_layout)
+
+        set_focal_length_header = QLabel("Set Focal Length of Selected Camera (mm)")
+        set_focal_length_header.setFont(header_font)
+        second_tab_layout.addWidget(set_focal_length_header)
+
+        set_focal_length_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your focal length in the dropdown menu')
+        second_tab_layout.addWidget(set_focal_length_instructions)
+
+        self.focal_length_dropdown = QComboBox()
+        self.focal_length_dropdown.addItems(focal_lengths)
+        self.focal_length_dropdown.activated.connect(self.set_focal_length)
+        second_tab_layout.addWidget(self.focal_length_dropdown)
+
+        set_locator_scale_header = QLabel("Set Locator Scale of Selected Camera (mm)")
+        set_locator_scale_header.setFont(header_font)
+        second_tab_layout.addWidget(set_locator_scale_header)
+
+        set_locator_scale_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your locator scale in the dropdown menu')
+        second_tab_layout.addWidget(set_locator_scale_instructions)
+
+        self.locator_scale_dropdown = QComboBox()
+        self.locator_scale_dropdown.addItems(locator_scales)
+        self.locator_scale_dropdown.activated.connect(self.set_locator_scale)
+        second_tab_layout.addWidget(self.locator_scale_dropdown)
+
         tab.addTab(first_tab, "Set Up Camera")
+        tab.addTab(second_tab, "Camera Settings")
 
         self.setCentralWidget(tab)
         self.show()
@@ -397,10 +461,20 @@ class CameraToolPySide(QMainWindow):
         cmds.setAttr(get_selected_camera_shape()+".verticalFilmAperture", 0.702)
         cmds.setAttr(get_selected_camera_shape()+".farClipPlane", 100000)
         set_default_settings()
+    
+    #Set the focal length of the camera via the confirm focal length button
+    def set_focal_length(self):
+        menu_value = self.focal_length_dropdown.currentText()
+        adjust_focal_length(float(menu_value)) 
+    
+    #Set the locator scale of the camera via the confirm locator scale button    
+    def set_locator_scale(self):
+        menu_value = self.locator_scale_dropdown.currentText()
+        adjust_locator_scale(float(menu_value))
 
 def main():
     CameraTool()
 
 if __name__ == '__main__':
-    #main()
+    main()
     tab_window = CameraToolPySide(parent=get_maya_window())
