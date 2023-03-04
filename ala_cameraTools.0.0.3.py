@@ -1,7 +1,20 @@
 # ala_cameraTools.0.03.py
 # This tool creates a camera based on a real lworld camera, and lets user set Arri Master Prime focal lengths.
 
+from PySide2.QtCore import *
+from PySide2.QtWidgets import *
+from PySide2.QtGui import *
+from shiboken2 import wrapInstance
+from maya import OpenMayaUI as omui
 import maya.cmds as cmds
+import mtoa.utils as mutils
+
+aspect_ratios = [
+    '4:3',
+    '16:9',
+    '16:10',
+    '3:2'
+]
 
 #function to get selected camera shape on the outliner
 def get_selected_camera_shape():
@@ -60,18 +73,6 @@ def set_three_by_two_settings():
     set_resolution_height = cmds.setAttr('defaultResolution.height', 720)
     set_device_aspect_ratio = cmds.setAttr('defaultResolution.deviceAspectRatio', 1.5)
     
-# creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
-def create_camera():
-    camera_name = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
-    set_default_settings()
-
-# Sets the camera Aperature made by the pipeline to match an AlexaLF camera. And sets the scene Render Settings to HD.
-def alexa_camera():
-    cmds.setAttr(get_selected_camera_shape()+".horizontalFilmAperture", 1.247)
-    cmds.setAttr(get_selected_camera_shape()+".verticalFilmAperture", 0.702)
-    cmds.setAttr(get_selected_camera_shape()+".farClipPlane", 100000)
-    set_default_settings()
-
 #Set the focal length of the camera
 def adjust_focal_length(focal_length):
     cmds.setAttr(get_selected_camera_shape()+".fl", focal_length)
@@ -157,7 +158,12 @@ def animate_camera():
     cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 135, inTangentType="spline", outTangentType="spline")
     cmds.currentTime(180)
     cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 180, inTangentType="spline", outTangentType="spline")    
-            
+
+def get_maya_window():
+    maya_main_window_ptr = omui.MQtUtil.mainWindow()
+    maya_main_window = wrapInstance(int(maya_main_window_ptr), QWidget)
+    return maya_main_window
+          
 #class for camera UI
 class CameraTool():
     def __init__(self):
@@ -313,8 +319,88 @@ class CameraTool():
             set_sixteen_by_ten_settings()
         elif menu_value == '3/2':
             set_three_by_two_settings()
+
+class CameraToolPySide(QMainWindow):
+    def __init__(self, parent = None):
+        super(CameraToolPySide, self).__init__(parent)
+        #set name of the UI
+        self.setWindowTitle("Camera Tool")
+        #Initiate tabs for UI
+        tab = QTabWidget()
+
+        #first Tab: create camera + set aspect ratio
+        first_tab = QWidget()
+        first_tab_layout = QVBoxLayout()
+        first_tab.setLayout(first_tab_layout)
+
+        #create camera section
+        create_camera_header = QLabel("PREVIS: Creates an AlexaLF camera")
+        header_font=QFont('Arial', 15)
+        header_font.setBold(True)
+        create_camera_header.setFont(header_font)
+        first_tab_layout.addWidget(create_camera_header)
+
+        create_camera_text = QLabel("Sets the correct render settings")
+        first_tab_layout.addWidget(create_camera_text)
+
+        create_camera_button = QPushButton("Create Camera")
+        create_camera_button.clicked.connect(self.create_camera)
+        first_tab_layout.addWidget(create_camera_button)
+
+        #Adjust Aspect Ratio Section
+        aspect_ratio_header = QLabel("Set Aspect Ratio")
+        aspect_ratio_header.setFont(header_font)
+        first_tab_layout.addWidget(aspect_ratio_header)
+
+        aspect_ratio_instructions = QLabel(' Select your aspect ratio for your scene in the dropdown menu')
+        first_tab_layout.addWidget(aspect_ratio_instructions)
+
+        self.camera_dropdown = QComboBox()
+        self.camera_dropdown.addItems(aspect_ratios)
+        self.camera_dropdown.activated.connect(self.set_aspect_ratio)
+        first_tab_layout.addWidget(self.camera_dropdown)
+
+        #Set AlexaLF section
+        set_alexaLF_settings_header = QLabel("LAYOUT: Sets AlexaLF Settings")
+        set_alexaLF_settings_header.setFont(header_font)
+        first_tab_layout.addWidget(set_alexaLF_settings_header)
+
+        set_alexaLF_settings_button = QPushButton("AlexaLF Settings")
+        set_alexaLF_settings_button.clicked.connect(self.alexa_camera)
+        first_tab_layout.addWidget(set_alexaLF_settings_button)
+
+        tab.addTab(first_tab, "Set Up Camera")
+
+        self.setCentralWidget(tab)
+        self.show()
+    
+    #creates an AlexaLF camera and sets the film back. Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
+    def create_camera(self):
+        camera_name = cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
+        set_default_settings()
+    
+    #adjust aspect ratio 
+    def set_aspect_ratio(self):
+        menu_value = self.camera_dropdown.currentText()
+        if menu_value == "4:3":
+            set_four_by_three_settings()
+        elif menu_value == "16:9":
+            set_default_settings()
+        elif menu_value == "16:10":
+            set_sixteen_by_ten_settings()
+        elif menu_value == "3:2":
+            set_three_by_two_settings()
+    
+    #Sets the camera Aperature made by the pipeline to match an AlexaLF camera. And sets the scene Render Settings to HD.
+    def alexa_camera(self):  
+        cmds.setAttr(get_selected_camera_shape()+".horizontalFilmAperture", 1.247)
+        cmds.setAttr(get_selected_camera_shape()+".verticalFilmAperture", 0.702)
+        cmds.setAttr(get_selected_camera_shape()+".farClipPlane", 100000)
+        set_default_settings()
+
 def main():
     CameraTool()
 
 if __name__ == '__main__':
-    main()
+    #main()
+    tab_window = CameraToolPySide(parent=get_maya_window())
