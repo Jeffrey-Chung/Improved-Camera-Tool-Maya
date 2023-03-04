@@ -145,33 +145,7 @@ def basic_depth_of_field_settings():
 def get_option_menu_value(option_menu):
     menu_value = cmds.optionMenu(option_menu, q=True, value=True)
     return menu_value  
-    
-#create circular turntable curve
-def create_curve(selected_object):
-    turntable_circle = cmds.circle( nr=(0, 0, 1), c=(cmds.getAttr(selected_object + '.translateX'), cmds.getAttr(selected_object + '.translateY'), cmds.getAttr(selected_object + '.translateZ')), r=1000)
-    cmds.setAttr(turntable_circle[0] + '.rotateX', -90)   
-
-#create turntable animation for moving the camera
-def animate_camera():
-    selected_camera = get_selected_camera_transform()
-    selected_curve = get_object_to_focus()
-    motion_path = cmds.pathAnimation(selected_curve, selected_camera, stu = 0, etu = 180, follow = True, fractionMode = True) #attach the camera to the curve
-    cmds.setAttr(selected_camera + '.rotateX', 0) 
-    cmds.setAttr(selected_camera + '.rotateY', 180)
-    
-    '''increase camera angle at the Y axis by 45 degrees in every quarter
-    both tangent types are spline to use a non-linear interpolation for a smoother animation for camera'''
-    cmds.currentTime(0)
-    cmds.setKeyframe(selected_camera, attribute = 'rotateX' , value = 0, inTangentType="spline", outTangentType="spline") #can adjust this attribute to whatever angle you want depending on height of circle
-    cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = -180, inTangentType="spline", outTangentType="spline")
-    cmds.currentTime(45)  
-    cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = -135, inTangentType="spline", outTangentType="spline")
-    cmds.currentTime(90)  
-    cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 0, inTangentType="spline", outTangentType="spline")
-    cmds.currentTime(135)  
-    cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 135, inTangentType="spline", outTangentType="spline")
-    cmds.currentTime(180)
-    cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 180, inTangentType="spline", outTangentType="spline")    
+  
 
 def get_maya_window():
     maya_main_window_ptr = omui.MQtUtil.mainWindow()
@@ -467,10 +441,45 @@ class CameraToolPySide(QMainWindow):
         disable_dof_button.clicked.connect(self.disable_depth_of_field)
         third_tab_layout.addWidget(disable_dof_button)
 
+        #Fourth tab: Turntable camera animation
+        fourth_tab = QWidget()
+        fourth_tab_layout = QVBoxLayout()
+        fourth_tab.setLayout(fourth_tab_layout)
 
+        #Set Up Curve section
+        set_up_curve_header = QLabel("Turntable circle: Set circular curve")
+        set_up_curve_header.setFont(header_font)
+        fourth_tab_layout.addWidget(set_up_curve_header)
+
+        set_up_curve_instructions = QLabel(' 1. Select your object in the outliner \n 2. Click on the button below to create the circle')
+        fourth_tab_layout.addWidget(set_up_curve_instructions)
+
+        set_up_curve_button = QPushButton("Create Circle")
+        set_up_curve_button.clicked.connect(self.create_curve)
+        fourth_tab_layout.addWidget(set_up_curve_button)
+
+        #Set Up Animation section
+        set_up_animation_header = QLabel("Turntable animation: Setup Camera Animation")
+        set_up_animation_header.setFont(header_font)
+        fourth_tab_layout.addWidget(set_up_animation_header)
+
+        set_up_animation_instructions = QLabel(' 1. Select your Camera on the outliner \n 2. Select your curve on the outliner \n 3. Click on the Animate Camera button to setup the animation')
+        set_up_animation_tip = QLabel('Make sure both camera + distance dimension is selected')
+        set_up_animation_tip_font = QFont()
+        set_up_animation_tip_font.setItalic(True)
+        set_up_animation_tip.setFont(set_up_animation_tip_font)
+        fourth_tab_layout.addWidget(set_up_animation_instructions)
+        fourth_tab_layout.addWidget(set_up_animation_tip)
+
+        set_up_animation_button = QPushButton("Animate Camera")
+        set_up_animation_button.clicked.connect(self.animate_camera)
+        fourth_tab_layout.addWidget(set_up_animation_button)
+
+        #Add all tabs 
         tab.addTab(first_tab, "Set Up Camera")
         tab.addTab(second_tab, "Camera Settings")
         tab.addTab(third_tab, "Depth of Field Options")
+        tab.addTab(fourth_tab, "Camera Animation")
 
         self.setCentralWidget(tab)
         self.show()
@@ -529,7 +538,35 @@ class CameraToolPySide(QMainWindow):
         distance_dimension_shape = get_object_to_focus()
         cmds.delete(distance_dimension_shape)
         cmds.setAttr(camera_shape+".depthOfField", False)
-        cmds.setAttr(camera_shape + ".aiEnableDOF", False) 
+        cmds.setAttr(camera_shape + ".aiEnableDOF", False)
+    
+    #create circular turntable curve
+    def create_curve(self):
+        selected_object = get_selected_object()
+        turntable_circle = cmds.circle( nr=(0, 0, 1), c=(cmds.getAttr(selected_object + '.translateX'), cmds.getAttr(selected_object + '.translateY'), cmds.getAttr(selected_object + '.translateZ')), r=1000)
+        cmds.setAttr(turntable_circle[0] + '.rotateX', -90)
+            
+    #create turntable animation for moving the camera
+    def animate_camera(self):
+        selected_camera = get_selected_camera_transform()
+        selected_curve = get_object_to_focus()
+        motion_path = cmds.pathAnimation(selected_curve, selected_camera, stu = 0, etu = 180, follow = True, fractionMode = True) #attach the camera to the curve
+        cmds.setAttr(selected_camera + '.rotateX', 0) 
+        cmds.setAttr(selected_camera + '.rotateY', 180)
+    
+        '''increase camera angle at the Y axis by 45 degrees in every quarter
+        both tangent types are spline to use a non-linear interpolation for a smoother animation for camera'''
+        cmds.currentTime(0)
+        cmds.setKeyframe(selected_camera, attribute = 'rotateX' , value = 0, inTangentType="spline", outTangentType="spline") #can adjust this attribute to whatever angle you want depending on height of circle
+        cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = -180, inTangentType="spline", outTangentType="spline")
+        cmds.currentTime(45)  
+        cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = -135, inTangentType="spline", outTangentType="spline")
+        cmds.currentTime(90)  
+        cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 0, inTangentType="spline", outTangentType="spline")
+        cmds.currentTime(135)  
+        cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 135, inTangentType="spline", outTangentType="spline")
+        cmds.currentTime(180)
+        cmds.setKeyframe(selected_camera, attribute = 'rotateY' , value = 180, inTangentType="spline", outTangentType="spline")     
     
 
 def main():
