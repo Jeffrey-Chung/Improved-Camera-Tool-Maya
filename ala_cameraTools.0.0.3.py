@@ -172,20 +172,14 @@ class CameraTool(QMainWindow):
         create_camera_header.setFont(header_font)
         first_tab_layout.addWidget(create_camera_header)
 
-        create_camera_text = QLabel("Sets the correct render settings")
-        first_tab_layout.addWidget(create_camera_text)
-
         create_camera_button = QPushButton("Create Camera")
         create_camera_button.clicked.connect(self.create_camera)
         first_tab_layout.addWidget(create_camera_button)
 
         #Adjust Aspect Ratio Section
-        aspect_ratio_header = QLabel("Set Aspect Ratio")
+        aspect_ratio_header = QLabel("Set Aspect Ratio in Dropdown Menu Below")
         aspect_ratio_header.setFont(header_font)
         first_tab_layout.addWidget(aspect_ratio_header)
-
-        aspect_ratio_instructions = QLabel('Select your aspect ratio for your scene in the dropdown menu')
-        first_tab_layout.addWidget(aspect_ratio_instructions)
 
         self.camera_dropdown = QComboBox()
         self.camera_dropdown.addItems(aspect_ratios)
@@ -206,12 +200,17 @@ class CameraTool(QMainWindow):
         second_tab_layout = QVBoxLayout()
         second_tab.setLayout(second_tab_layout)
         
+        #Setup fonts for instructional text
+        instructions_font = QFont('Arial', 15)
+        instructions_font_second_tab = QFont('Arial', 17)
+        
         #Set Focal Length Section
         set_focal_length_header = QLabel("Set Focal Length of Selected Camera (mm)")
         set_focal_length_header.setFont(header_font)
         second_tab_layout.addWidget(set_focal_length_header)
 
         set_focal_length_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your focal length in the dropdown menu')
+        set_focal_length_instructions.setFont(instructions_font_second_tab)
         second_tab_layout.addWidget(set_focal_length_instructions)
 
         self.focal_length_dropdown = QComboBox()
@@ -225,6 +224,7 @@ class CameraTool(QMainWindow):
         second_tab_layout.addWidget(set_locator_scale_header)
 
         set_locator_scale_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your locator scale in the dropdown menu')
+        set_locator_scale_instructions.setFont(instructions_font_second_tab)
         second_tab_layout.addWidget(set_locator_scale_instructions)
 
         self.locator_scale_dropdown = QComboBox()
@@ -270,11 +270,11 @@ class CameraTool(QMainWindow):
 
         disable_dof_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your distance dimension on in the outliner\n 3. Disable DOF by clicking on the button below')
         disable_dof_tip = QLabel('Make sure both camera + distance dimension is selected')
-        disable_dof_tip_font = QFont()
+        disable_dof_tip_font = QFont('Arial', 15)
         disable_dof_tip_font.setItalic(True)
         disable_dof_tip.setFont(disable_dof_tip_font)
         disable_dof_note = QLabel("NOTE: You need to delete locators manually")
-        disable_dof_note_font = QFont()
+        disable_dof_note_font = QFont('Arial', 15)
         disable_dof_note_font.setBold(True)
         disable_dof_note.setFont(disable_dof_note_font)
         third_tab_layout.addWidget(disable_dof_instructions)
@@ -296,6 +296,7 @@ class CameraTool(QMainWindow):
         fourth_tab_layout.addWidget(set_up_curve_header)
 
         set_up_curve_instructions = QLabel(' 1. Select your object in the outliner \n 2. Click on the button below to create the circle')
+        set_up_curve_instructions.setFont(instructions_font)
         fourth_tab_layout.addWidget(set_up_curve_instructions)
 
         set_up_curve_button = QPushButton("Create Circle")
@@ -308,8 +309,9 @@ class CameraTool(QMainWindow):
         fourth_tab_layout.addWidget(set_up_animation_header)
 
         set_up_animation_instructions = QLabel(' 1. Select your Camera on the outliner \n 2. Select your curve on the outliner \n 3. Click on the Animate Camera button to setup the animation')
+        set_up_animation_instructions.setFont(instructions_font)
         set_up_animation_tip = QLabel('Make sure both camera + distance dimension is selected')
-        set_up_animation_tip_font = QFont()
+        set_up_animation_tip_font = QFont('Arial', 15)
         set_up_animation_tip_font.setItalic(True)
         set_up_animation_tip.setFont(set_up_animation_tip_font)
         fourth_tab_layout.addWidget(set_up_animation_instructions)
