@@ -140,26 +140,6 @@ def basic_depth_of_field_settings():
     return shot_camera_shape, distance_dimension_shape
     
 
-#add DOF rig via Focal length         
-def add_depth_of_field():
-    shot_camera_shape, distance_dimension_shape = basic_depth_of_field_settings()
-    cmds.connectAttr(distance_dimension_shape + '.distance', shot_camera_shape+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
-    #do the same for arnold render view
-    cmds.setAttr(shot_camera_shape + ".aiEnableDOF", True)
-    cmds.setAttr(shot_camera_shape + ".aiApertureSize", 2.8)
-    cmds.connectAttr(distance_dimension_shape + '.distance', shot_camera_shape+'.aiFocusDistance')
-
-    
-#connect DOF via f stop, distance will be clamped to 64 units if it goes above
-def add_depth_of_field_fstop():
-    shot_camera_shape, distance_dimension_shape = basic_depth_of_field_settings()
-    cmds.connectAttr(distance_dimension_shape + '.distance', shot_camera_shape+'.fStop') #connect distance attribute of distance dimension to f stop of camera so that DOF can be varied
-    
-#disable Depth of Field Rig of camera (focal distance + fStop)
-def disable_depth_of_field(camera_shape, distance_dimension_shape):
-    cmds.delete(distance_dimension_shape)
-    cmds.setAttr(camera_shape+".depthOfField", False)
-    cmds.setAttr(camera_shape + ".aiEnableDOF", False) 
 
 #get the value from each option menu to coduct event
 def get_option_menu_value(option_menu):
@@ -407,7 +387,8 @@ class CameraToolPySide(QMainWindow):
         second_tab = QWidget()
         second_tab_layout = QVBoxLayout()
         second_tab.setLayout(second_tab_layout)
-
+        
+        #Set Focal Length Section
         set_focal_length_header = QLabel("Set Focal Length of Selected Camera (mm)")
         set_focal_length_header.setFont(header_font)
         second_tab_layout.addWidget(set_focal_length_header)
@@ -419,7 +400,8 @@ class CameraToolPySide(QMainWindow):
         self.focal_length_dropdown.addItems(focal_lengths)
         self.focal_length_dropdown.activated.connect(self.set_focal_length)
         second_tab_layout.addWidget(self.focal_length_dropdown)
-
+        
+        #Set Locator Scale Section
         set_locator_scale_header = QLabel("Set Locator Scale of Selected Camera (mm)")
         set_locator_scale_header.setFont(header_font)
         second_tab_layout.addWidget(set_locator_scale_header)
@@ -432,8 +414,63 @@ class CameraToolPySide(QMainWindow):
         self.locator_scale_dropdown.activated.connect(self.set_locator_scale)
         second_tab_layout.addWidget(self.locator_scale_dropdown)
 
+        #Third tab: DOF options
+        third_tab = QWidget()
+        third_tab_layout = QVBoxLayout()
+        third_tab.setLayout(third_tab_layout)
+
+        #Set Up DOF section
+        set_dof_header = QLabel("Depth of Field: Set DOF Rig")
+        set_dof_header.setFont(header_font)
+        third_tab_layout.addWidget(set_dof_header)
+
+        set_dof_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your object to focus on in the outliner \n 3. Apply DOF by clicking on the button below')
+        set_dof_tip = QLabel('Make sure both camera + distance dimension is selected')
+        set_dof_tip_font = QFont()
+        set_dof_tip_font.setItalic(True)
+        set_dof_tip.setFont(set_dof_tip_font)
+        set_dof_note = QLabel("NOTE: \n 1. if the focused object's coordinates is at the origin, \nthe aim locator will not spawn but DOF will still be applied as usual \n 2. For the f stop option, distance will be clamped to 64 units")
+        set_dof_note_font = QFont()
+        set_dof_note_font.setBold(True)
+        set_dof_note.setFont(set_dof_note_font)
+        third_tab_layout.addWidget(set_dof_instructions)
+        third_tab_layout.addWidget(set_dof_tip)
+        third_tab_layout.addWidget(set_dof_note)
+
+        set_dof_with_focal_length_button = QPushButton("Enable DOF Focal Length")
+        set_dof_with_focal_length_button.clicked.connect(self.add_depth_of_field)
+        third_tab_layout.addWidget(set_dof_with_focal_length_button)
+
+        set_dof_with_f_stop_button = QPushButton("Enable DOF f Stop")
+        set_dof_with_f_stop_button.clicked.connect(self.add_depth_of_field_fstop)
+        third_tab_layout.addWidget(set_dof_with_f_stop_button)
+
+        #Diable DOF Section
+        disable_dof_header = QLabel("Depth of Field: Disable DOF Rig")
+        disable_dof_header.setFont(header_font)
+        third_tab_layout.addWidget(disable_dof_header)
+
+        disable_dof_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your distance dimension on in the outliner\n 3. Disable DOF by clicking on the button below')
+        disable_dof_tip = QLabel('Make sure both camera + distance dimension is selected')
+        disable_dof_tip_font = QFont()
+        disable_dof_tip_font.setItalic(True)
+        disable_dof_tip.setFont(disable_dof_tip_font)
+        disable_dof_note = QLabel("NOTE: You need to delete locators manually")
+        disable_dof_note_font = QFont()
+        disable_dof_note_font.setBold(True)
+        disable_dof_note.setFont(disable_dof_note_font)
+        third_tab_layout.addWidget(disable_dof_instructions)
+        third_tab_layout.addWidget(disable_dof_tip)
+        third_tab_layout.addWidget(disable_dof_note)
+
+        disable_dof_button = QPushButton("Disable DOF")
+        disable_dof_button.clicked.connect(self.disable_depth_of_field)
+        third_tab_layout.addWidget(disable_dof_button)
+
+
         tab.addTab(first_tab, "Set Up Camera")
         tab.addTab(second_tab, "Camera Settings")
+        tab.addTab(third_tab, "Depth of Field Options")
 
         self.setCentralWidget(tab)
         self.show()
@@ -471,6 +508,29 @@ class CameraToolPySide(QMainWindow):
     def set_locator_scale(self):
         menu_value = self.locator_scale_dropdown.currentText()
         adjust_locator_scale(float(menu_value))
+    
+    #add DOF rig via Focal length         
+    def add_depth_of_field(self):
+        shot_camera_shape, distance_dimension_shape = basic_depth_of_field_settings()
+        cmds.connectAttr(distance_dimension_shape + '.distance', shot_camera_shape+'.focusDistance') #connect distance attribute of distance dimension to focus distance of camera so that DOF can be varied
+        #do the same for arnold render view
+        cmds.setAttr(shot_camera_shape + ".aiEnableDOF", True)
+        cmds.setAttr(shot_camera_shape + ".aiApertureSize", 2.8)
+        cmds.connectAttr(distance_dimension_shape + '.distance', shot_camera_shape+'.aiFocusDistance')
+        
+    #connect DOF via f stop, distance will be clamped to 64 units if it goes above
+    def add_depth_of_field_fstop(self):
+        shot_camera_shape, distance_dimension_shape = basic_depth_of_field_settings()
+        cmds.connectAttr(distance_dimension_shape + '.distance', shot_camera_shape+'.fStop') #connect distance attribute of distance dimension to f stop of camera so that DOF can be varied
+    
+    #disable Depth of Field Rig of camera (focal distance + fStop)
+    def disable_depth_of_field(self):
+        camera_shape = get_selected_camera_shape()
+        distance_dimension_shape = get_object_to_focus()
+        cmds.delete(distance_dimension_shape)
+        cmds.setAttr(camera_shape+".depthOfField", False)
+        cmds.setAttr(camera_shape + ".aiEnableDOF", False) 
+    
 
 def main():
     CameraTool()
