@@ -113,7 +113,7 @@ class CameraTool():
         cmds.text('3. Disable DOF by clicking on the button below')
         cmds.text("\n\nNOTE: You need to delete locators manually", fn='smallObliqueLabelFont')
         cmds.separator(h=20)
-        cmds.button(label = 'Disable DOF', command = 'disable_depth_of_field(get_selected_camera_shape(), get_object_to_focus())')
+        cmds.button(label = 'Disable DOF', command = 'disable_depth_of_field(get_selected_cam_shape(), get_object_to_focus())')
         cmds.setParent("..")
         
         #Fourth tab: Turntable camera animation
