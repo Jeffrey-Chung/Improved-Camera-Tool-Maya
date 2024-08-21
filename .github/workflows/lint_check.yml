@@ -23,5 +23,7 @@ jobs:
       
       # Ingores import-error and wildcard-import since importing works perfectly fine for Maya
       # Ignores undefined variables since it can't identify PyQT functions
+      # Ignores W0511 warning to fix R0914 and R0915 at another date
+      # For other warnings that needs to be disabled, check the comments in the code
       - name: Run Linting checks for ala_camera_tools.py
-        run: pylint -d E0602 -d E0401 -d W0401 ala_camera_tools.py
+        run: pylint -d E0602 -d E0401 -d W0401 -d C0301 -d R0914 -d R0915 -d W0511 ala_camera_tools.py

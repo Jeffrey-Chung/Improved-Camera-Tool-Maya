@@ -74,19 +74,19 @@ def get_object_to_focus():
     '''
     function to get the object to focus for DOF
     '''
-    for selected_object in cmds.ls(sl=True):
-        if selected_object != get_selected_cam_transform():
-            return selected_object
+    for obj in cmds.ls(sl=True):
+        if obj != get_selected_cam_transform():
+            return obj
     return None
 
 
-def get_selected_object():
+def get_obj():
     '''
     gets a selected object in general, likely to be used for other tools as well
     '''
-    for selected_object in cmds.ls(sl=True):
-        if selected_object:
-            return selected_object
+    for obj in cmds.ls(sl=True):
+        if obj:
+            return obj
     return None
 
 
@@ -171,7 +171,7 @@ def assign_locators(shot_camera_transform):
         else:
             cmds.rename(locator_transform, 'AimLocator')
 
-#refactored code common to both DOF methods
+# Refactored code common to both DOF methods
 def basic_depth_of_field_settings():
     '''
     get selected camera shape, transform and objec to focus for DOF
@@ -183,7 +183,7 @@ def basic_depth_of_field_settings():
     cmds.setAttr(shot_camera_shape+".depthOfField", True)
     cmds.setAttr(shot_camera_shape+".locatorScale", 30)
 
-    #Use distance tool to create 2 locators between camera and selected object
+    # Use distance tool to create 2 locators between camera and selected object
     shot_cam_x =  cmds.getAttr(shot_camera_transform + '.translateX')
     shot_cam_y = cmds.getAttr(shot_camera_transform + '.translateY')
     shot_cam_z = cmds.getAttr(shot_camera_transform + '.translateZ')
@@ -193,7 +193,7 @@ def basic_depth_of_field_settings():
     shot_camera_coordinates = (shot_cam_x, shot_cam_y, shot_cam_z)
     object_coord = (object_x, object_y, object_z)
     dist_dimension_shape = cmds.distanceDimension(sp=shot_camera_coordinates, ep=object_coord)
-    assign_locators(shot_camera_transform, object_to_focus)
+    assign_locators(shot_camera_transform)
     return shot_camera_shape, dist_dimension_shape
 
 
@@ -219,6 +219,7 @@ class CameraTool(QMainWindow):
     '''
     Class for camera UI   
     '''
+    # TODO: Refactor code to fix R0914 and R0915 warning
     def __init__(self):
         super().__init__()
         #set name of the UI
@@ -275,8 +276,10 @@ class CameraTool(QMainWindow):
         set_focal_length_header.setFont(header_font)
         second_tab_layout.addWidget(set_focal_length_header)
 
-        set_focal_length_instructions_step_one = QLabel(' 1. Select your camera in the outliner')
-        set_focal_length_instructions_step_two = QLabel(' \n 2. Select your focal length in the dropdown menu')
+        set_focal_length_text = ' 1. Select your camera in the outliner'
+        set_focal_length_instructions_step_one = QLabel(set_focal_length_text)
+        set_focal_length_text = ' \n 2. Select your focal length in the dropdown menu'
+        set_focal_length_instructions_step_two = QLabel(set_focal_length_text)
         set_focal_length_instructions_step_one.setFont(instructions_font_second_tab)
         set_focal_length_instructions_step_two.setFont(instructions_font_second_tab)
         second_tab_layout.addWidget(set_focal_length_instructions_step_one)
@@ -292,8 +295,10 @@ class CameraTool(QMainWindow):
         set_locator_scale_header.setFont(header_font)
         second_tab_layout.addWidget(set_locator_scale_header)
 
-        set_locator_scale_instructions_step_one = QLabel(' 1. Select your camera in the outliner')
-        set_locator_scale_instructions_step_two = QLabel(' \n 2. Select your locator scale in the dropdown menu')
+        set_locator_scale_text = ' 1. Select your camera in the outliner'
+        set_locator_scale_instructions_step_one = QLabel(set_locator_scale_text)
+        set_locator_scale_text = ' \n 2. Select your locator scale in the dropdown menu'
+        set_locator_scale_instructions_step_two = QLabel(set_locator_scale_text)
         set_locator_scale_instructions_step_one.setFont(instructions_font_second_tab)
         set_locator_scale_instructions_step_two.setFont(instructions_font_second_tab)
         second_tab_layout.addWidget(set_locator_scale_instructions_step_one)
@@ -314,18 +319,36 @@ class CameraTool(QMainWindow):
         set_dof_header.setFont(header_font)
         third_tab_layout.addWidget(set_dof_header)
 
-        set_dof_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your object to focus on in the outliner \n 3. Apply DOF by clicking on the button below')
+        set_dof_instructions_text = ' 1. Select your camera in the outliner '
+        set_dof_instructions_step_one = QLabel(set_dof_instructions_text)
+        set_dof_instructions_text = '\n 2. Select your object to focus on in the outliner'
+        set_dof_instructions_step_two = QLabel(set_dof_instructions_text)
+        set_dof_instructions_text = ' \n 3. Apply DOF by clicking on the button below'
+        set_dof_instructions_step_three = QLabel(set_dof_instructions_text)
+
         set_dof_tip = QLabel('Make sure both camera + distance dimension is selected')
         set_dof_tip_font = QFont()
         set_dof_tip_font.setItalic(True)
         set_dof_tip.setFont(set_dof_tip_font)
-        set_dof_note = QLabel("NOTE: \n 1. if the focused object's coordinates is at the origin, \nthe aim locator will not spawn but DOF will still be applied as usual \n 2. For the f stop option, distance will be clamped to 64 units")
+
+        set_dof_note_text = "NOTE: \n 1. if the focused object's coordinates is at the origin, "
+        set_dof_note_step_1_pt_1 = QLabel(set_dof_note_text)
+        set_dof_note_text = "\nthe aim locator won't spawn but DOF will still be applied as usual"
+        set_dof_note_step_1_pt_2 = QLabel(set_dof_note_text)
+        set_dof_note_text = "2. For the f stop option, distance will be clamped to 64 units"
+        set_dof_note_step_2 = QLabel(set_dof_note_text)
         set_dof_note_font = QFont()
         set_dof_note_font.setBold(True)
-        set_dof_note.setFont(set_dof_note_font)
-        third_tab_layout.addWidget(set_dof_instructions)
+        set_dof_note_step_1_pt_1.setFont(set_dof_note_font)
+        set_dof_note_step_1_pt_2.setFont(set_dof_note_font)
+        set_dof_note_step_2.setFont(set_dof_note_font)
+        third_tab_layout.addWidget(set_dof_instructions_step_one)
+        third_tab_layout.addWidget(set_dof_instructions_step_two)
+        third_tab_layout.addWidget(set_dof_instructions_step_three)
         third_tab_layout.addWidget(set_dof_tip)
-        third_tab_layout.addWidget(set_dof_note)
+        third_tab_layout.addWidget(set_dof_note_step_1_pt_1)
+        third_tab_layout.addWidget(set_dof_note_step_1_pt_2)
+        third_tab_layout.addWidget(set_dof_note_step_2)
 
         set_dof_with_focal_length_button = QPushButton("Enable DOF Focal Length")
         set_dof_with_focal_length_button.clicked.connect(self.add_depth_of_field)
@@ -340,7 +363,12 @@ class CameraTool(QMainWindow):
         disable_dof_header.setFont(header_font)
         third_tab_layout.addWidget(disable_dof_header)
 
-        disable_dof_instructions = QLabel(' 1. Select your camera in the outliner \n 2. Select your distance dimension on in the outliner\n 3. Disable DOF by clicking on the button below')
+        disable_dof_text = ' 1. Select your camera in the outliner '
+        disable_dof_instructions_step_one = QLabel(disable_dof_text)
+        disable_dof_text = '\n 2. Select your distance dimension on in the outliner'
+        disable_dof_instructions_step_two = QLabel(disable_dof_text)
+        disable_dof_text = '\n 3. Disable DOF by clicking on the button below'
+        disable_dof_instructions_step_three = QLabel(disable_dof_text)
         disable_dof_tip = QLabel('Make sure both camera + distance dimension is selected')
         disable_dof_tip_font = QFont('Arial', 15)
         disable_dof_tip_font.setItalic(True)
@@ -349,7 +377,9 @@ class CameraTool(QMainWindow):
         disable_dof_note_font = QFont('Arial', 15)
         disable_dof_note_font.setBold(True)
         disable_dof_note.setFont(disable_dof_note_font)
-        third_tab_layout.addWidget(disable_dof_instructions)
+        third_tab_layout.addWidget(disable_dof_instructions_step_one)
+        third_tab_layout.addWidget(disable_dof_instructions_step_two)
+        third_tab_layout.addWidget(disable_dof_instructions_step_three)
         third_tab_layout.addWidget(disable_dof_tip)
         third_tab_layout.addWidget(disable_dof_note)
 
@@ -367,26 +397,38 @@ class CameraTool(QMainWindow):
         set_up_curve_header.setFont(header_font)
         fourth_tab_layout.addWidget(set_up_curve_header)
 
-        set_up_curve_instructions = QLabel(' 1. Select your object in the outliner \n 2. Click on the button below to create the circle')
-        set_up_curve_instructions.setFont(instructions_font)
-        fourth_tab_layout.addWidget(set_up_curve_instructions)
+        set_up_curve_text = ' 1. Select your object in the outliner \n'
+        set_up_curve_instructions_step_one = QLabel(set_up_curve_text)
+        set_up_curve_text = ' 2. Click on the button below to create the circle'
+        set_up_curve_instructions_step_two = QLabel(set_up_curve_text)
+        set_up_curve_instructions_step_one.setFont(instructions_font)
+        set_up_curve_instructions_step_two.setFont(instructions_font)
+        fourth_tab_layout.addWidget(set_up_curve_instructions_step_one)
+        fourth_tab_layout.addWidget(set_up_curve_instructions_step_two)
 
         set_up_curve_button = QPushButton("Create Circle")
         set_up_curve_button.clicked.connect(self.create_curve)
         fourth_tab_layout.addWidget(set_up_curve_button)
 
         #Set Up Animation section
-        set_up_animation_header = QLabel("Turntable animation: Setup Camera Animation")
-        set_up_animation_header.setFont(header_font)
-        fourth_tab_layout.addWidget(set_up_animation_header)
+        set_up_anim_header = QLabel("Turntable animation: Setup Camera Animation")
+        set_up_anim_header.setFont(header_font)
+        fourth_tab_layout.addWidget(set_up_anim_header)
 
-        set_up_animation_instructions = QLabel(' 1. Select your Camera on the outliner \n 2. Select your curve on the outliner \n 3. Click on the Animate Camera button to setup the animation')
-        set_up_animation_instructions.setFont(instructions_font)
+        set_up_anim_text = ' 1. Select your Camera on the outliner \n '
+        set_up_anim_instruct_step_one = QLabel(set_up_anim_text)
+        set_up_anim_text = '2. Select your curve on the outliner \n'
+        set_up_anim_instruct_step_two = QLabel(set_up_anim_text)
+        set_up_anim_text = ' 3. Click on the Animate Camera button to setup the animation'
+        set_up_anim_instruct_step_three = QLabel(set_up_anim_text)
+        set_up_anim_instruct.setFont(instructions_font)
         set_up_animation_tip = QLabel('Make sure both camera + distance dimension is selected')
         set_up_animation_tip_font = QFont('Arial', 15)
         set_up_animation_tip_font.setItalic(True)
         set_up_animation_tip.setFont(set_up_animation_tip_font)
-        fourth_tab_layout.addWidget(set_up_animation_instructions)
+        fourth_tab_layout.addWidget(set_up_anim_instruct_step_one)
+        fourth_tab_layout.addWidget(set_up_anim_instruct_step_two)
+        fourth_tab_layout.addWidget(set_up_anim_instruct_step_three)
         fourth_tab_layout.addWidget(set_up_animation_tip)
 
         set_up_animation_button = QPushButton("Animate Camera")
@@ -408,7 +450,8 @@ class CameraTool(QMainWindow):
         Creates an AlexaLF camera and sets the film back. 
         Sets the Far Clip PLane to 10,000. Also setting the render settings to HD.
         '''
-        cmds.camera(n = "ShotCamera", horizontalFilmAperture=1.247, verticalFilmAperture=0.702, farClipPlane=100000)
+        # Ignore C0301 warning because we can't change the name of arguments from Maya API
+        cmds.camera(n="ShotCamera",horizontalFilmAperture=1.247,verticalFilmAperture=0.702,farClipPlane=100000)
         set_default_settings()
 
 
@@ -488,11 +531,11 @@ class CameraTool(QMainWindow):
         '''
         Create circular turntable curve
         '''
-        selected_object = get_selected_object()
-        selected_object_x = cmds.getAttr(selected_object + '.translateX')
-        selected_object_y = cmds.getAttr(selected_object + '.translateY')
-        selected_object_z = cmds.getAttr(selected_object + '.translateZ')
-        turntable_circle = cmds.circle(nr=(0, 0, 1), c=(selected_object_x, selected_object_y, selected_object_z), r=1000)
+        obj = get_obj()
+        obj_x = cmds.getAttr(obj + '.translateX')
+        obj_y = cmds.getAttr(obj + '.translateY')
+        obj_z = cmds.getAttr(obj + '.translateZ')
+        turntable_circle = cmds.circle(nr=(0, 0, 1), c=(obj_x, obj_y, obj_z), r=1000)
         cmds.setAttr(turntable_circle[0] + '.rotateX', -90)
 
     def animate_camera(self):
@@ -502,23 +545,29 @@ class CameraTool(QMainWindow):
         both tangent types are spline to use a non-linear interpolation
         for a smoother animation for camera
         '''
-        selected_cam = get_selected_cam_transform()
-        selected_curve = get_object_to_focus()
-        cmds.pathAnimation(selected_curve, selected_cam, stu = 0, etu = 180, follow = True, fractionMode = True)
-        cmds.setAttr(selected_cam + '.rotateX', 0)
-        cmds.setAttr(selected_cam + '.rotateY', 180)
+        cam = get_selected_cam_transform()
+        curve = get_object_to_focus()
+        cmds.pathAnimation(curve,cam,stu = 0,etu = 180,follow = True,fractionMode = True)
+        cmds.setAttr(cam + '.rotateX', 0)
+        cmds.setAttr(cam + '.rotateY', 180)
 
         cmds.currentTime(0)
-        cmds.setKeyframe(selected_cam,attribute = 'rotateX',value = 0,inTangentType="spline",outTangentType="spline")
-        cmds.setKeyframe(selected_cam,attribute = 'rotateY',value = -180,inTangentType="spline",outTangentType="spline")
+        # Ignore C0301 warning because we can't change the name of arguments from Maya API
+        cmds.setKeyframe(cam,attribute = 'rotateX',value = 0,inTangentType="spline",outTangentType="spline")
+        # Ignore C0301 warning because we can't change the name of arguments from Maya API
+        cmds.setKeyframe(cam,attribute = 'rotateY',value = -180,inTangentType="spline",outTangentType="spline")
         cmds.currentTime(45)
-        cmds.setKeyframe(selected_cam,attribute = 'rotateY',value = -135,inTangentType="spline",outTangentType="spline")
+        # Ignore C0301 warning because we can't change the name of arguments from Maya API
+        cmds.setKeyframe(cam,attribute = 'rotateY',value = -135,inTangentType="spline",outTangentType="spline")
         cmds.currentTime(90)
-        cmds.setKeyframe(selected_cam,attribute = 'rotateY',value = 0,inTangentType="spline",outTangentType="spline")
+        # Ignore C0301 warning because we can't change the name of arguments from Maya API
+        cmds.setKeyframe(cam,attribute = 'rotateY',value = 0,inTangentType="spline",outTangentType="spline")
         cmds.currentTime(135)
-        cmds.setKeyframe(selected_cam,attribute = 'rotateY',value = 135,inTangentType="spline",outTangentType="spline")
+        # Ignore C0301 warning because we can't change the name of arguments from Maya API
+        cmds.setKeyframe(cam,attribute = 'rotateY',value = 135,inTangentType="spline",outTangentType="spline")
         cmds.currentTime(180)
-        cmds.setKeyframe(selected_cam, attribute = 'rotateY',value = 180,inTangentType="spline",outTangentType="spline")
+        # Ignore C0301 warning because we can't change the name of arguments from Maya API
+        cmds.setKeyframe(cam, attribute = 'rotateY',value = 180,inTangentType="spline",outTangentType="spline")
 
 if __name__ == '__main__':
     tab_window = CameraTool()

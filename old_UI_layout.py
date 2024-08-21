@@ -123,7 +123,7 @@ class CameraTool():
         cmds.text('Turntable circle: Set circular curve', fn='fixedWidthFont')
         cmds.text('1. Select your object in the outliner \n 2. Click on the button below to create the circle')
         cmds.separator(h=20)
-        cmds.button(label = 'Create Circle', command = 'create_curve(get_selected_object())')
+        cmds.button(label = 'Create Circle', command = 'create_curve(get_obj())')
         cmds.separator(h=20)
         cmds.text('Turntable animation: Setup Camera Animation', fn='fixedWidthFont')
         cmds.text('1. Select your Camera on the outliner \n 2. Select your curve on the outliner')
