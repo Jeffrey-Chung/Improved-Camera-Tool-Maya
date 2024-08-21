@@ -1,4 +1,6 @@
 # Improved Camera Tool Maya
+
+Purpose of tool: Ensure that object is always in focus regardless of distance.
  Add additions to the camera tool already completed based on the video here: https://www.youtube.com/watch?v=Yny3tsD_Qhk 
 <br/>
 <br/>
@@ -14,3 +16,4 @@
 9. Can adjust aspect ratio of camera before creating one <br />
 10. DOF can also be applied via f stop, f stop value will be clamped to 64 maximum <br />
 11. Camera can be animated around an object (similar to Animation Window -> Visualize -> Create Turntable for a camera)<br />
+12. Pylint is used to check for code quality, this will also be checked in a pull request.

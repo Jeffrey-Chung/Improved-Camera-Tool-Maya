@@ -2,6 +2,7 @@
 ala_camera_tools.py
 This tool creates a camera based on a real world camera
 and lets user set Arri Master Prime focal lengths.
+This is done so that DOF is maintained regardless of distance.
 '''
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
@@ -325,7 +326,7 @@ class CameraTool(QMainWindow):
         set_dof_instructions_text = ' \n 3. Apply DOF by clicking on the button below'
         set_dof_instructions_step_three = QLabel(set_dof_instructions_text)
 
-        set_dof_tip = QLabel('Make sure both camera + distance dimension is selected')
+        set_dof_tip = QLabel('Make sure both camera + object is selected')
         set_dof_tip_font = QFont()
         set_dof_tip_font.setItalic(True)
         set_dof_tip.setFont(set_dof_tip_font)
@@ -423,7 +424,7 @@ class CameraTool(QMainWindow):
         set_up_anim_instruct_step_one.setFont(instructions_font)
         set_up_anim_instruct_step_two.setFont(instructions_font)
         set_up_anim_instruct_step_three.setFont(instructions_font)
-        set_up_animation_tip = QLabel('Make sure both camera + distance dimension is selected')
+        set_up_animation_tip = QLabel('Make sure both camera + curve is selected')
         set_up_animation_tip_font = QFont('Arial', 15)
         set_up_animation_tip_font.setItalic(True)
         set_up_animation_tip.setFont(set_up_animation_tip_font)
