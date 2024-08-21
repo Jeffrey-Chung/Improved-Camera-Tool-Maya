@@ -269,7 +269,6 @@ class CameraTool(QMainWindow):
 
         #Setup fonts for instructional text
         instructions_font = QFont('Arial', 15)
-        instructions_font_second_tab = QFont('Arial', 17)
 
         #Set Focal Length Section
         set_focal_length_header = QLabel("Set Focal Length of Selected Camera (mm)")
@@ -278,10 +277,10 @@ class CameraTool(QMainWindow):
 
         set_focal_length_text = ' 1. Select your camera in the outliner'
         set_focal_length_instructions_step_one = QLabel(set_focal_length_text)
-        set_focal_length_text = ' \n 2. Select your focal length in the dropdown menu'
+        set_focal_length_text = ' 2. Select your focal length in the dropdown menu'
         set_focal_length_instructions_step_two = QLabel(set_focal_length_text)
-        set_focal_length_instructions_step_one.setFont(instructions_font_second_tab)
-        set_focal_length_instructions_step_two.setFont(instructions_font_second_tab)
+        set_focal_length_instructions_step_one.setFont(instructions_font)
+        set_focal_length_instructions_step_two.setFont(instructions_font)
         second_tab_layout.addWidget(set_focal_length_instructions_step_one)
         second_tab_layout.addWidget(set_focal_length_instructions_step_two)
 
@@ -297,10 +296,10 @@ class CameraTool(QMainWindow):
 
         set_locator_scale_text = ' 1. Select your camera in the outliner'
         set_locator_scale_instructions_step_one = QLabel(set_locator_scale_text)
-        set_locator_scale_text = ' \n 2. Select your locator scale in the dropdown menu'
+        set_locator_scale_text = ' 2. Select your locator scale in the dropdown menu'
         set_locator_scale_instructions_step_two = QLabel(set_locator_scale_text)
-        set_locator_scale_instructions_step_one.setFont(instructions_font_second_tab)
-        set_locator_scale_instructions_step_two.setFont(instructions_font_second_tab)
+        set_locator_scale_instructions_step_one.setFont(instructions_font)
+        set_locator_scale_instructions_step_two.setFont(instructions_font)
         second_tab_layout.addWidget(set_locator_scale_instructions_step_one)
         second_tab_layout.addWidget(set_locator_scale_instructions_step_two)
 
@@ -331,9 +330,9 @@ class CameraTool(QMainWindow):
         set_dof_tip_font.setItalic(True)
         set_dof_tip.setFont(set_dof_tip_font)
 
-        set_dof_note_text = "NOTE: \n 1. if the focused object's coordinates is at the origin, "
+        set_dof_note_text = "NOTE:\n1. if the focused object's coordinates is at the origin, "
         set_dof_note_step_1_pt_1 = QLabel(set_dof_note_text)
-        set_dof_note_text = "\nthe aim locator won't spawn but DOF will still be applied as usual"
+        set_dof_note_text = "the aim locator won't spawn but DOF will still be applied as usual"
         set_dof_note_step_1_pt_2 = QLabel(set_dof_note_text)
         set_dof_note_text = "2. For the f stop option, distance will be clamped to 64 units"
         set_dof_note_step_2 = QLabel(set_dof_note_text)
@@ -372,11 +371,11 @@ class CameraTool(QMainWindow):
         disable_dof_tip = QLabel('Make sure both camera + distance dimension is selected')
         disable_dof_tip_font = QFont('Arial', 15)
         disable_dof_tip_font.setItalic(True)
-        disable_dof_tip.setFont(disable_dof_tip_font)
+        disable_dof_tip.setFont(set_dof_tip_font)
         disable_dof_note = QLabel("NOTE: You need to delete locators manually")
         disable_dof_note_font = QFont('Arial', 15)
         disable_dof_note_font.setBold(True)
-        disable_dof_note.setFont(disable_dof_note_font)
+        disable_dof_note.setFont(set_dof_note_font)
         third_tab_layout.addWidget(disable_dof_instructions_step_one)
         third_tab_layout.addWidget(disable_dof_instructions_step_two)
         third_tab_layout.addWidget(disable_dof_instructions_step_three)
@@ -417,11 +416,13 @@ class CameraTool(QMainWindow):
 
         set_up_anim_text = ' 1. Select your Camera on the outliner \n '
         set_up_anim_instruct_step_one = QLabel(set_up_anim_text)
-        set_up_anim_text = '2. Select your curve on the outliner \n'
+        set_up_anim_text = ' 2. Select your curve on the outliner \n'
         set_up_anim_instruct_step_two = QLabel(set_up_anim_text)
         set_up_anim_text = ' 3. Click on the Animate Camera button to setup the animation'
         set_up_anim_instruct_step_three = QLabel(set_up_anim_text)
-        set_up_anim_instruct.setFont(instructions_font)
+        set_up_anim_instruct_step_one.setFont(instructions_font)
+        set_up_anim_instruct_step_two.setFont(instructions_font)
+        set_up_anim_instruct_step_three.setFont(instructions_font)
         set_up_animation_tip = QLabel('Make sure both camera + distance dimension is selected')
         set_up_animation_tip_font = QFont('Arial', 15)
         set_up_animation_tip_font.setItalic(True)
