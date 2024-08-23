@@ -1,6 +1,6 @@
 '''
 This script is purely served as a code extract for the previous UI. 
-It will not run on its own nor imported into ala_cameraTools.0.0.3.py
+It will not run on its own nor imported into ala_camera_tools.py
 script. Therefore treat it as a pseudo code here. 
 '''
 #class for camera UI
